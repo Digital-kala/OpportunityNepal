@@ -2,21 +2,28 @@
   "name": "opportunity_nepal",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://opportunity_nepal.github.io/opportunity_nepal",
+  "homepage": "https://digital-kala.github.io/OpportunityNepal.github.io/",
   "type": "module",
   "scripts": {
     "start": "vite",
+    "deploy": "yarn build && gh-pages -d dist",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/papaparse": "^5.3.7",
+    "axios": "^1.4.0",
+    "csv-loader": "^3.0.5",
+    "gh-pages": "^5.0.0",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.11.1",
     "react-scroll": "^1.8.9",
-    "react-use": "^17.4.0"
+    "react-use": "^17.4.0",
+    "vite-plugin-static-copy": "^0.17.0"
   },
   "devDependencies": {
     "@types/node": "^18.13.0",
