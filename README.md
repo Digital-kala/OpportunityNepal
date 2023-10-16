@@ -6,7 +6,7 @@ Welcome to Opportunity Nepal, a platform designed to help individuals find oppor
 
 Before you begin, make sure you have the following software installed on your system:
 
-- [Node.js](https://nodejs.org/)
+- [Node.js](https://nodejs.org/) [Install via Brew](brew install node)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 
 ## Getting Started
