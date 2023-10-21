@@ -10,7 +10,7 @@ export function Opportunity() {
                 <input type="text" className="border-2 border-gray-300 rounded-lg p-2" placeholder="Search for opportunities" />
                 <button className="bg-gray-300 rounded-lg p-2">Search</button>
             </div>
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 <OpportunityCard/>
                 <OpportunityCard/>
                 <OpportunityCard/>
