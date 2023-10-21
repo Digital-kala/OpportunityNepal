@@ -53,7 +53,7 @@ export function Home() {
                 </span>
                 <span className="text-gray-500"
                     style={{ display: 'block', textAlign: 'left' }}>
-                    {formatDate(item.date)}
+                    Deadline : {formatDate(item.date)}
                 </span>
             </>
         )
