@@ -11,6 +11,13 @@ const movingNavStyles = {
     offset: 'x 0',
 }
 
+type NavSectionProps = {
+    title: string;
+    url: string;
+    isSelected: boolean;
+    onItemClick: (url: string) => void;
+  };
+
 export function NavBar() {
     const [isAtPageTop, setIsAtPageTop] = useState(true);
     let lastScrollTop = 0;
@@ -54,7 +61,7 @@ export function NavBar() {
     return (
         <div className="fixed top-0 w-full hidden md:block transition-all duration-200 ease-in-out" id="navbar" style={isAtPageTop ? {} : movingNavStyles}>
             <nav className="flex items-center justify-center py-3 gap-5">
-                <NavSection title={'Home'} url={''} />
+                <NavSection title={'Home'} url={''}  />
                 <NavSection title={'Search Opportunities'} url={'opportunity'} />
                 <NavSection title={'About Us'} url={'about'} />
             </nav>
