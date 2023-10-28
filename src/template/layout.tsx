@@ -5,8 +5,8 @@ export function Layout({ children }: { children: ReactElement[] | ReactElement }
     return (
         <>
         <NavBar />
-        <div className="min-h-screen mx-8" id="layout">
-            <div className="justify-center flex items-center pt-[15vh]">
+        <div className="min-h-screen" id="layout">
+            <div className="justify-center flex items-center pt-[7vh]">
                 <div className='space-y-8 w-full'>
                     {children}
                 </div>

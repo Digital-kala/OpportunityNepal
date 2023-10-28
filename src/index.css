@@ -13,6 +13,8 @@
   font-family: 'Figtree', Helvetica, Arial, sans-serif;
 }
 
+
+
 @layer components {
   .text-2xs {
     font-size: 0.65rem;
@@ -61,19 +63,21 @@ body {
   background-color: white;
 }
 
+p{
+  letter-spacing: 0.025em;
+  line-height: 1.5rem; /* 20px */
+}
+
 h1 {
-  font-family: 'Calibre-Semibold';
   line-height: 1.1;
 }
 
 h2 {
-  font-family: 'Calibre-Semibold';
   line-height: 0.8;
 }
 
 button {
   border: 1px solid rgb(59 130 246 / 0.5);
-  font-family: 'SFMono-Regular';
   background-color: transparent;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -81,7 +85,6 @@ button {
 
 button:hover {
   transform: scale(1.06);
-  font-family: 'SFMono-Semibold';
 }
 
 .prevent-select {
