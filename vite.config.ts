@@ -8,7 +8,6 @@ export default defineConfig({
     react(),
     viteStaticCopy({
       targets: [
-        
       ]
     })
   ],
