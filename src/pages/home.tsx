@@ -1,73 +1,83 @@
 import { Layout } from "../template";
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import { formatDate } from "./utils";
+import { useEffect, useState } from "react";
+import useGoogleSheets from 'use-google-sheets';
 
 type Item = {
     name: string;
     date: Date;
+    description: string;
 }
 
 export function Home() {
-    const items: Item[] = [
-        {
-            name: 'Python',
-            date: new Date(2022, 1, 1),
-        },
-        {
-            name: 'C++',
-            date: new Date(2022, 1, 1),
-        },
-        {
-            name: 'Javascript',
-            date: new Date(2022, 1, 1),
-        },
-        {
-            name: 'Java',
-            date: new Date(2022, 1, 1),
-        },
-    ]
+    const { data: sheetData, loading, error } = useGoogleSheets({
+        apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
+        sheetId: import.meta.env.VITE_GOOGLE_SHEET_ID,
+    });
+
+    const [opportunities, setOpportunities] = useState<Array<Item>>([]);
+
+    useEffect(() => {
+        if(sheetData.length === 0) return;
+
+        for(const row of sheetData[0]['data'] as Array<any>){
+            const item = {
+                name: row['Opportunity Title'],
+                date: new Date('2022-01-01'),
+                description: row['Opportunity Description:']
+            }
+            // make sure the opportunity is not already in the list
+            if(opportunities.find(opportunity => opportunity.name === item.name)) continue;
+            setOpportunities(prev => [...prev, item])
+        }
+    }, [sheetData])
 
     const handleOnSearch = (string: string, results: any) => {
-        console.log(string, results)
+        // console.log(string, results)
     }
 
     const handleOnHover = (result: Item) => {
-        console.log(result)
+        // console.log(result)
     }
 
     const handleOnSelect = (item: Item) => {
-        console.log(item)
+        // console.log(item)
     }
 
     const handleOnFocus = () => {
-        console.log('Focused')
+        // console.log('Focused')
     }
 
     const formatResult = (item: Item) => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
         return (
-            <>
-                <span style={{ display: 'block', textAlign: 'left' }}>
+            <div key={item.name + ' - ' + item.description }>
+                <span  key={item.name} style={{ display: 'block', textAlign: 'left' }}>
                     {item.name}
                 </span>
                 <span className="text-gray-500"
                     style={{ display: 'block', textAlign: 'left' }}>
                     Deadline : {formatDate(item.date)}
                 </span>
-            </>
+            </div>
         )
     }
 
+    if(error){
+        return <div>An Error has occured.</div>
+    }
+
     return (
-        <Layout>
+        <Layout className="mx-8 mt-8">
             <div className="bg-gray-200 w-full py-12 px-16 rounded-lg">
                 <div className="flex flex-col p-4 justify-center items-center h-full gap-y-2">
                     <h1 className="text-xl">Explore New Opportunities!</h1>
                     <p className="text-gray-500 text-sm">Or, post an Opportunity for free.</p>
                 </div>
                 <ReactSearchAutocomplete<Item>
-                    items={items}
+                    items={opportunities}
                     placeholder="Search for opportunities"
                     onSearch={handleOnSearch}
                     onHover={handleOnHover}

@@ -2,7 +2,7 @@ import { Layout } from "../template";
 
 export function Opportunity() {
     return (
-        <Layout>
+        <Layout className="mx-8">
             <div>
                 Available Opportunities
             </div>
