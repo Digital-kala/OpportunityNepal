@@ -1,17 +1,17 @@
 import Papa from 'papaparse';
-import ReactSearchBox from "react-search-box";
 import { Layout } from "../template";
+import { BiSearch } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { loadingSpinner } from "../components/LoadingSpinner";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
-import { BiSearch } from "react-icons/bi";
 
 import bannerImg from '../assets/banner.png';
 
 
 type OpportunitySummary = {
-    key: string;
-    value: string;
+    id: number;
+    name: string;
 }
 
 type OpportunityProp = {
@@ -62,10 +62,10 @@ export function Home() {
         if (opportunities.length === 0) return;
 
         // find and add search opportunities
-        const searchOpportunities = opportunities.map((opportunity) => {
+        const searchOpportunities = opportunities.map((opportunity, idx) => {
             return {
-                key: opportunity.title,
-                value: opportunity.title,
+                id: idx,
+                name: opportunity.title
             } as OpportunitySummary
         });
         setSearchOpportunities(searchOpportunities);
@@ -85,6 +85,14 @@ export function Home() {
         setRecentlyAddedOpportunities(recentlyAddedOppor.slice(0, 10));
     }, [opportunities.length])
 
+    const formatResult = (item: OpportunitySummary) => {
+        return (
+            <>
+                <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+            </>
+        )
+    }
+
 
     // When the sheet is not loaded, show a loading spinner
     if (opportunities.length === 0 || searchOpportunities.length === 0) return loadingSpinner()
@@ -99,24 +107,22 @@ export function Home() {
                     <button className="px-4 py-2 text-md font-bold bg-gray-200/95 rounded-lg website_blue" onClick={() => handleURLClick(opportunityFormURL)}>
                         Post An Opportunity
                     </button>
-                </div>
 
-                <ReactSearchBox
-                    placeholder="Search for Opportunities"
-                    data={searchOpportunities}
-                    onSelect={(record: any) => { }}
+                </div>
+                <ReactSearchAutocomplete
+                    items={searchOpportunities}
+                    onSearch={() => { }}
+                    onHover={() => { }}
+                    onSelect={() => { }}
                     onFocus={() => { }}
-                    onChange={(value) => { }}
                     autoFocus
-                    leftIcon={<BiSearch />}
-                    iconBoxSize="48px"
-                    fuseConfigs={{ threshold: 0.05 }}
-                    type='text'
+                    formatResult={formatResult}
+                    styling={{zIndex: 100}}
                 />
             </div>
 
             <div className="w-full pt-10 pb-4">
-                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center">Upcoming Opportunties</h1>
+                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center drop-shadow-md z-0">Upcoming Opportunties</h1>
                 <div className="flex p-y-4 overflow-x-auto">
                     {upcomingOpportunities.map((opportunity, index) => {
                         return OpportunityCard(index, opportunity, "upcoming")
@@ -125,7 +131,7 @@ export function Home() {
             </div>
 
             <div className="w-full pt-5 pb-8">
-                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center">Recently Added</h1>
+                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center drop-shadow-md">Recently Added</h1>
                 <div className="flex p-y-4 overflow-x-auto">
                     {recentlyAddedOpportunities.map((opportunity, index) => {
                         return OpportunityCard(index, opportunity, "recent")
@@ -142,7 +148,7 @@ function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "u
     let image = opportunity.pictureURL;
     if (image && image.length > 0) {
         image = 'https://drive.google.com/uc?export=view&id=' + image.substring(image.indexOf('id=') + 3, image.length)
-    } else{
+    } else {
         image = bannerImg;
     }
 
@@ -154,7 +160,7 @@ function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "u
                 <div className="flex flex-col p-4">
                     <h1 className="text-xl font-semibold text-slate-800 py-3">{opportunity.title}</h1>
                     <p className="bg-slate-200/50 py-2 rounded-lg mb-5 text-sm">
-                        { cardtype === "upcoming"
+                        {cardtype === "upcoming"
                             ? "Deadline : " + formatDate(opportunity.deadlineDate)
                             : "Added on " + formatDate(opportunity.createdDate)
                         }
