@@ -7,5 +7,7 @@ export function redirectHome(){
 };
 
 export function formatDate(date:Date) {
-    return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const dateString = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    if(dateString === "Invalid Date") return "Not specified"
+    return dateString;
 }

@@ -1,129 +1,160 @@
+import Papa from 'papaparse';
+import ReactSearchBox from "react-search-box";
 import { Layout } from "../template";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import { formatDate } from "./utils";
 import { useEffect, useState } from "react";
-import useGoogleSheets from 'use-google-sheets';
+import { loadingSpinner } from "../components/LoadingSpinner";
+import { formatDate } from "./utils";
+import {BiSearch} from "react-icons/bi";
 
-type Item = {
-    name: string;
-    date: Date;
-    description: string;
+
+type OpportunitySummary = {
+    key: string;
+    value: string;
 }
 
-export function Home() {
-    const { data: sheetData, loading, error } = useGoogleSheets({
-        apiKey: import.meta.env.VITE_GOOGLE_CLOUD_API_KEY,
-        sheetId: import.meta.env.VITE_GOOGLE_SHEET_ID,
-    });
+type OpportunityProp = {
+    title: string;
+    type: string;
+    organization: string;
+    createdDate: Date;
+    deadlineDate: Date;
+    description: string;
+    pictureURL: string;
+}
 
-    const [opportunities, setOpportunities] = useState<Array<Item>>([]);
+const dataPath = process.env.NODE_ENV === 'development' ?
+    '../../data/data.csv' :
+    'https://digital-kala.github.io/OpportunityNepal.github.io/data/data.csv';
+
+export function Home() {
+    const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>([]);
+    const [searchOpportunities, setSearchOpportunities] = useState<Array<OpportunitySummary>>([]);
+    const [upcomingOpportunities, setUpcomingOpportunities] = useState<Array<OpportunityProp>>([]);
+    const [recentlyAddedOpportunities, setRecentlyAddedOpportunities] = useState<Array<OpportunityProp>>([]);
 
     useEffect(() => {
-        if(sheetData.length === 0) return;
+        Papa.parse(dataPath, {
+            download: true,
+            header: true,
+            complete: (result) => {
+                const data = result.data.map((opportunity: any) => {
+                    return {
+                        title: opportunity.title,
+                        type: opportunity.type,
+                        organization: opportunity.organization,
+                        createdDate: opportunity.createdDate ? new Date(opportunity.createdDate) : undefined,
+                        deadlineDate: opportunity.deadlineDate ? new Date(opportunity.deadlineDate) : undefined,
+                        description: opportunity.description,
+                        pictureURL: opportunity.pictureURL,
+                    }
+                }) as OpportunityProp[];
 
-        for(const row of sheetData[0]['data'] as Array<any>){
-            const item = {
-                name: row['Opportunity Title'],
-                date: new Date('2022-01-01'),
-                description: row['Opportunity Description:']
-            }
-            // make sure the opportunity is not already in the list
-            if(opportunities.find(opportunity => opportunity.name === item.name)) continue;
-            setOpportunities(prev => [...prev, item])
+                setOpportunities(data);
+            },
+        });
+    }, []);
+
+    useEffect(() => {
+        if (opportunities.length === 0) return;
+
+        // find and add search opportunities
+        const searchOpportunities = opportunities.map((opportunity) => {
+            return {
+                key: opportunity.title,
+                value: opportunity.title,
+            } as OpportunitySummary
+        });
+        setSearchOpportunities(searchOpportunities);
+
+        // find and add upcoming opportunities
+        let upcomingOppor = opportunities.filter(opportunity => opportunity.deadlineDate && opportunity.deadlineDate >= new Date() && opportunity.createdDate instanceof Date);
+        if (upcomingOppor.length > 1) {
+            upcomingOppor = upcomingOppor.sort((a, b) => a.deadlineDate < b.deadlineDate ? -1 : 1);
         }
-    }, [sheetData])
+        setUpcomingOpportunities(upcomingOppor.slice(0, 10));
 
-    const handleOnSearch = (string: string, results: any) => {
-        // console.log(string, results)
-    }
+        // find and add recently added opportunities
+        let recentlyAddedOppor = opportunities.filter(opportunity => opportunity.createdDate && opportunity.createdDate instanceof Date);
+        if (recentlyAddedOppor.length > 1) {
+            recentlyAddedOppor = recentlyAddedOppor.sort((a, b) => a.createdDate < b.createdDate ? -1 : 1);
+        }
+        setRecentlyAddedOpportunities(recentlyAddedOppor.slice(0, 10));
+    }, [opportunities.length])
 
-    const handleOnHover = (result: Item) => {
-        // console.log(result)
-    }
 
-    const handleOnSelect = (item: Item) => {
-        // console.log(item)
-    }
-
-    const handleOnFocus = () => {
-        // console.log('Focused')
-    }
-
-    const formatResult = (item: Item) => {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
-        return (
-            <div key={item.name + ' - ' + item.description }>
-                <span  key={item.name} style={{ display: 'block', textAlign: 'left' }}>
-                    {item.name}
-                </span>
-                <span className="text-gray-500"
-                    style={{ display: 'block', textAlign: 'left' }}>
-                    Deadline : {formatDate(item.date)}
-                </span>
-            </div>
-        )
-    }
-
-    if(error){
-        return <div>An Error has occured.</div>
-    }
+    // When the sheet is not loaded, show a loading spinner
+    if (opportunities.length === 0 || searchOpportunities.length === 0) return loadingSpinner()
 
     return (
-        <Layout className="mx-8 mt-8">
+        <Layout className="px-8 mt-8">
             <div className="bg-gray-200 w-full py-12 px-16 rounded-lg">
                 <div className="flex flex-col p-4 justify-center items-center h-full gap-y-2">
                     <h1 className="text-xl">Explore New Opportunities!</h1>
                     <p className="text-gray-500 text-sm">Or, post an Opportunity for free.</p>
+
                 </div>
-                <ReactSearchAutocomplete<Item>
-                    items={opportunities}
-                    placeholder="Search for opportunities"
-                    onSearch={handleOnSearch}
-                    onHover={handleOnHover}
-                    onSelect={handleOnSelect}
-                    onFocus={handleOnFocus}
-                    formatResult={formatResult}
-                    autoFocus
-                />
+
+                <ReactSearchBox
+                        placeholder="Search for Opportunities"
+                        data={searchOpportunities}
+                        onSelect={(record: any) => { }}
+                        onFocus={() => { }}
+                        onChange={(value) => { }}
+                        autoFocus
+                        leftIcon={<BiSearch/>}
+                        iconBoxSize="48px"
+                        fuseConfigs={{ threshold: 0.05 }}
+                        type='text'
+                    />
             </div>
+
 
             <div className="w-full pb-8">
                 <h1 className="pb-5">Upcoming Opportunties</h1>
-
                 <div className="flex p-y-4 overflow-x-auto">
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
+                    {upcomingOpportunities.map((opportunity, index) => {
+                        return OpportunityCard(index, opportunity, "upcoming")
+                    })}
                 </div>
             </div>
 
 
             <div className="w-full pb-8">
                 <h1 className="pb-5">Recently Added</h1>
-
                 <div className="flex p-y-4 overflow-x-auto">
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
-                    <OpportunityCard />
+                    {recentlyAddedOpportunities.map((opportunity, index) => {
+                        return OpportunityCard(index, opportunity, "recent")
+                    })}
                 </div>
             </div>
         </Layout>
     );
 }
 
-function OpportunityCard() {
+function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent") {
+    const maxDescriptionLength = 80;
+
+    let image = opportunity.pictureURL;
+    if (image && image.length > 0) {
+        image = 'https://drive.google.com/uc?export=view&id=' + image.substring(image.indexOf('id=') + 3, image.length)
+    }
+
     return (
-        <div className="flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4">
-            <div className="bg-gray-200 h-64 w-full rounded-lg"></div>
+        <div className="flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4" key={key}>
+
+            {opportunity.pictureURL ? <img src={image} alt={opportunity.title} className="bg-gray-200 h-64 w-full rounded-lg object-cover" /> : <div className="bg-gray-200 h-64 w-full rounded-lg" />}
             <div className="flex flex-col p-4">
-                <h1 className="text-xl">Opportunity Title</h1>
-                <p className="text-gray-500">Opportunity Description</p>
-                <p className="text-gray-500">Opportunity Date</p>
+                <h1 className="text-xl">{opportunity.title}</h1>
+                {
+                    cardtype === "upcoming"
+                        ? <p className="text-gray-500 pb-5">Deadline : {opportunity.deadlineDate && formatDate(opportunity.deadlineDate)}</p>
+                        : <p className="text-gray-500 pb-5">Added on {opportunity.createdDate && formatDate(opportunity.createdDate)}</p>
+                }
+                <p className="text-gray-500 text-justify">{
+                    opportunity.description.length > maxDescriptionLength
+                        ? opportunity.description.substring(0, maxDescriptionLength) + "..."
+                        : opportunity.description
+                }</p>
             </div>
         </div>
     )
