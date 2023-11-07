@@ -3,8 +3,10 @@ import ReactSearchBox from "react-search-box";
 import { Layout } from "../template";
 import { useEffect, useState } from "react";
 import { loadingSpinner } from "../components/LoadingSpinner";
-import { formatDate } from "./utils";
-import {BiSearch} from "react-icons/bi";
+import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
+import { BiSearch } from "react-icons/bi";
+
+import bannerImg from '../assets/banner.png';
 
 
 type OpportunitySummary = {
@@ -22,9 +24,11 @@ type OpportunityProp = {
     pictureURL: string;
 }
 
+const opportunityFormURL = 'https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA';
 const dataPath = process.env.NODE_ENV === 'development' ?
     '../../data/data.csv' :
     'https://digital-kala.github.io/OpportunityNepal.github.io/data/data.csv';
+
 
 export function Home() {
     const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>([]);
@@ -42,7 +46,7 @@ export function Home() {
                         title: opportunity.title,
                         type: opportunity.type,
                         organization: opportunity.organization,
-                        createdDate: opportunity.createdDate ? new Date(opportunity.createdDate) : undefined,
+                        createdDate: opportunity.createdDate ? parseDateTimeString(opportunity.createdDate) : undefined,
                         deadlineDate: opportunity.deadlineDate ? new Date(opportunity.deadlineDate) : undefined,
                         description: opportunity.description,
                         pictureURL: opportunity.pictureURL,
@@ -87,30 +91,32 @@ export function Home() {
 
     return (
         <Layout className="px-8 mt-8">
-            <div className="bg-gray-200 w-full py-12 px-16 rounded-lg">
-                <div className="flex flex-col p-4 justify-center items-center h-full gap-y-2">
-                    <h1 className="text-xl">Explore New Opportunities!</h1>
-                    <p className="text-gray-500 text-sm">Or, post an Opportunity for free.</p>
-
+            <div className="bg-gray-200 w-full pt-12 md:pt-[10vh] pb-2 md:pb-[4vh] px-16 rounded-lg shadow-md"
+                style={{ backgroundImage: `url(${bannerImg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} >
+                <div className="flex flex-col p-4 justify-center items-center h-full gap-y-4 mb-4">
+                    <h1 className="text-3xl font-bold tracking-wide website_yellow drop-shadow-md">Explore New Opportunities!</h1>
+                    <p className="text-gray-200 text-lg drop-shadow-md">Or</p>
+                    <button className="px-4 py-2 text-md font-bold bg-gray-200/95 rounded-lg website_blue" onClick={() => handleURLClick(opportunityFormURL)}>
+                        Post An Opportunity
+                    </button>
                 </div>
 
                 <ReactSearchBox
-                        placeholder="Search for Opportunities"
-                        data={searchOpportunities}
-                        onSelect={(record: any) => { }}
-                        onFocus={() => { }}
-                        onChange={(value) => { }}
-                        autoFocus
-                        leftIcon={<BiSearch/>}
-                        iconBoxSize="48px"
-                        fuseConfigs={{ threshold: 0.05 }}
-                        type='text'
-                    />
+                    placeholder="Search for Opportunities"
+                    data={searchOpportunities}
+                    onSelect={(record: any) => { }}
+                    onFocus={() => { }}
+                    onChange={(value) => { }}
+                    autoFocus
+                    leftIcon={<BiSearch />}
+                    iconBoxSize="48px"
+                    fuseConfigs={{ threshold: 0.05 }}
+                    type='text'
+                />
             </div>
 
-
-            <div className="w-full pb-8">
-                <h1 className="pb-5">Upcoming Opportunties</h1>
+            <div className="w-full pt-10 pb-4">
+                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center">Upcoming Opportunties</h1>
                 <div className="flex p-y-4 overflow-x-auto">
                     {upcomingOpportunities.map((opportunity, index) => {
                         return OpportunityCard(index, opportunity, "upcoming")
@@ -118,9 +124,8 @@ export function Home() {
                 </div>
             </div>
 
-
-            <div className="w-full pb-8">
-                <h1 className="pb-5">Recently Added</h1>
+            <div className="w-full pt-5 pb-8">
+                <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center">Recently Added</h1>
                 <div className="flex p-y-4 overflow-x-auto">
                     {recentlyAddedOpportunities.map((opportunity, index) => {
                         return OpportunityCard(index, opportunity, "recent")
@@ -132,30 +137,35 @@ export function Home() {
 }
 
 function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent") {
-    const maxDescriptionLength = 80;
+    const maxDescriptionLength = 150;
 
     let image = opportunity.pictureURL;
     if (image && image.length > 0) {
         image = 'https://drive.google.com/uc?export=view&id=' + image.substring(image.indexOf('id=') + 3, image.length)
+    } else{
+        image = bannerImg;
     }
 
     return (
-        <div className="flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4" key={key}>
-
-            {opportunity.pictureURL ? <img src={image} alt={opportunity.title} className="bg-gray-200 h-64 w-full rounded-lg object-cover" /> : <div className="bg-gray-200 h-64 w-full rounded-lg" />}
-            <div className="flex flex-col p-4">
-                <h1 className="text-xl">{opportunity.title}</h1>
-                {
-                    cardtype === "upcoming"
-                        ? <p className="text-gray-500 pb-5">Deadline : {opportunity.deadlineDate && formatDate(opportunity.deadlineDate)}</p>
-                        : <p className="text-gray-500 pb-5">Added on {opportunity.createdDate && formatDate(opportunity.createdDate)}</p>
-                }
-                <p className="text-gray-500 text-justify">{
-                    opportunity.description.length > maxDescriptionLength
-                        ? opportunity.description.substring(0, maxDescriptionLength) + "..."
-                        : opportunity.description
-                }</p>
-            </div>
+        <div className="flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4 py-8" key={key}>
+            <button className='w-full h-full rounded-lg shadow-md border-0 flex flex-col'>
+                <div className="bg-gray-200 h-64 w-full rounded-lg shadow-sm overflow-hidden"
+                    style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
+                <div className="flex flex-col p-4">
+                    <h1 className="text-xl font-semibold text-slate-800 py-3">{opportunity.title}</h1>
+                    <p className="bg-slate-200/50 py-2 rounded-lg mb-5 text-sm">
+                        { cardtype === "upcoming"
+                            ? "Deadline : " + formatDate(opportunity.deadlineDate)
+                            : "Added on " + formatDate(opportunity.createdDate)
+                        }
+                    </p>
+                    <p className="text-gray-800 text-justify px-4 pb-2 text-sm">{
+                        opportunity.description.length > maxDescriptionLength
+                            ? opportunity.description.substring(0, maxDescriptionLength) + " . . ."
+                            : opportunity.description
+                    }</p>
+                </div>
+            </button>
         </div>
     )
 }
