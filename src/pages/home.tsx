@@ -1,20 +1,19 @@
 import Papa from 'papaparse';
 import { Layout } from "../template";
-import { BiSearch } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { loadingSpinner } from "../components/LoadingSpinner";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
 
 import bannerImg from '../assets/banner.png';
 
 
-type OpportunitySummary = {
+export type OpportunitySummary = {
     id: number;
     name: string;
 }
 
-type OpportunityProp = {
+export type OpportunityProp = {
     title: string;
     type: string;
     organization: string;
@@ -24,8 +23,8 @@ type OpportunityProp = {
     pictureURL: string;
 }
 
-const opportunityFormURL = 'https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA';
-const dataPath = process.env.NODE_ENV === 'development' ?
+export const opportunityFormURL = 'https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA';
+export const dataPath = process.env.NODE_ENV === 'development' ?
     '../../data/data.csv' :
     'https://digital-kala.github.io/OpportunityNepal.github.io/data/data.csv';
 
@@ -142,7 +141,7 @@ export function Home() {
     );
 }
 
-function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent") {
+export function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent", source?:string) {
     const maxDescriptionLength = 150;
 
     let image = opportunity.pictureURL;
@@ -152,8 +151,11 @@ function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "u
         image = bannerImg;
     }
 
+    let defaultClass = "flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4 py-8"
+    if(source === "opportunity") defaultClass = "flex flex-col py-4 "
+
     return (
-        <div className="flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4 py-8" key={key}>
+        <div className={defaultClass} key={key}>
             <button className='w-full h-full rounded-lg shadow-md border-0 flex flex-col'>
                 <div className="bg-gray-200 h-64 w-full rounded-lg shadow-sm overflow-hidden"
                     style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />

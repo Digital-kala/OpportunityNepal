@@ -11,9 +11,13 @@ export function handleURLClick(url: string) {
 }
 
 export function formatDate(date: Date) {
-    const dateString = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    if (dateString === "Invalid Date") return "Not specified"
-    return dateString;
+    try{
+        const dateString = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        if (dateString === "Invalid Date") return "Not specified";
+        return dateString;
+    } catch {
+        return "Not specified";
+    }
 }
 
 export function parseDateTimeString(dateString: string) {
