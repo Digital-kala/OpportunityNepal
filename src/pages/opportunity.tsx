@@ -1,24 +1,52 @@
-import Papa from 'papaparse';
+import Papa from "papaparse";
 import { Layout } from "../template";
-import { FiSearch } from 'react-icons/fi';
-import { useEffect, useState } from "react";
-import { parseDateTimeString } from './utils';
+import React, { useEffect, useState } from "react";
+import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
 import { loadingSpinner } from "../components/LoadingSpinner";
-import { OpportunityCard, OpportunityProp, OpportunityTypes, dataPath } from "./home";
+import { OpportunityTypes, dataPath } from "./home";
+
+import { IconType } from "react-icons";
+import { TiGlobeOutline } from 'react-icons/ti';
+import { GrLocation } from 'react-icons/gr';
+import { MdDateRange, MdUpdate } from 'react-icons/md';
+import { CgWebsite } from 'react-icons/cg';
+
+import bannerImg from "../assets/banner.png";
 
 
-type filteringOptions = {
-    searchTerm: string,
-    opportunityType: Array<OpportunityTypes>,
+type OpportunityProp = {
+    id: number;
+    title: string;
+    organization: string;
+    type: OpportunityTypes;
+    location: string;
+    createdDate: Date;
+    deadlineDate: Date;
+    description: string;
+    eligibility: string;
+    benefits: string;
+    applicatoinProcess: string;
+    requiredDocuments: string;
+    websiteURL: string;
+    additionalInformation: string;
+    isRecurring: boolean;
+    educationLevel: string;
+    field: string;
+    pictureURL: string;
+};
+
+type OpportunityInfoProp = {
+    icon: IconType;
+    title: string;
+    detail: string;
+    capitalize?: boolean;
+    website?: boolean;
 }
 
 export function Opportunity() {
+    const [id, setId] = useState<number>(-1);
     const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>([]);
-    const [filteredOpportunities, setFilteredOpportunities] = useState<Array<OpportunityProp>>([]);
-    const [filteringOptions, setFilteringOptions] = useState<filteringOptions>({
-        searchTerm: "",
-        opportunityType: [],
-    });
+    const [opportunity, setOpportunity] = useState<OpportunityProp>();
 
     useEffect(() => {
         Papa.parse(dataPath, {
@@ -27,114 +55,159 @@ export function Opportunity() {
             complete: (result) => {
                 const data = result.data.map((opportunity: any) => {
                     return {
-                        title: opportunity.title,
+                        ...opportunity,
+                        id: parseInt(opportunity.id),
                         type: opportunity.type.toLowerCase() as OpportunityTypes,
-                        organization: opportunity.organization,
-                        createdDate: opportunity.createdDate ? parseDateTimeString(opportunity.createdDate) : undefined,
-                        deadlineDate: opportunity.deadlineDate ? new Date(opportunity.deadlineDate) : undefined,
-                        description: opportunity.description,
-                        pictureURL: opportunity.pictureURL,
-                    }
+                        createdDate: opportunity.createdDate
+                            ? parseDateTimeString(opportunity.createdDate)
+                            : undefined,
+                        deadlineDate: opportunity.deadlineDate
+                            ? new Date(opportunity.deadlineDate)
+                            : undefined,
+                    };
                 }) as OpportunityProp[];
 
                 setOpportunities(data);
             },
         });
+
+        const id = window.location.hash.split("/")[2];
+        console.log(window.location.hash.split("/"), id);
+        setId(parseInt(id));
     }, []);
 
-    
-
     useEffect(() => {
         if (opportunities.length === 0) return;
+        if (id === -1) return;
 
-        setFilteredOpportunities(opportunities);
-    }, [opportunities.length])
-
-    useEffect(() => {
-        if (opportunities.length === 0) return;
-
-        const filtered = opportunities.filter((opportunity) => {
-            // filter by search opportunity type if given by the user otherwise use the complete list
-            if (filteringOptions.opportunityType.length >0 &&!filteringOptions.opportunityType.includes(opportunity.type)) return false;
-
-            // filter by search term if given by the user otherwise use the complete list
-            if (filteringOptions.searchTerm.length > 0 && !opportunity.title.toLowerCase().includes(filteringOptions.searchTerm.toLowerCase())) return false;
-
-            return true;
-        });
-
-        setFilteredOpportunities(filtered);
-    }, [filteringOptions])
-
-
-    function onTodoChangeOpportunityType(value: string){
-        const previousOpportunityType = filteringOptions.opportunityType;
-
-        if(previousOpportunityType.includes(value as OpportunityTypes)){
-            const newOpportunityType = previousOpportunityType.filter((type) => type !== value);
-            setFilteringOptions({
-                ...filteringOptions,
-                opportunityType: newOpportunityType,
-            });
-        } else {
-            const newOpportunityType = [...previousOpportunityType, value as OpportunityTypes];
-            setFilteringOptions({
-                ...filteringOptions,
-                opportunityType: newOpportunityType,
-            });
-        }
-    }
-
-    function onTodoChangeOpportunitySearchTerm(){
-        const value = (document.getElementById("searchTerm") as HTMLInputElement).value;
-        setFilteringOptions({
-            ...filteringOptions,
-            searchTerm: value,
-        });
-    }
-
+        const opportunity = opportunities.find(
+            (opportunity) => opportunity.id === id
+        );
+        setOpportunity(opportunity);
+    }, [id, opportunities.length]);
 
     // When the sheet is not loaded, show a loading spinner
-    if (opportunities.length === 0) return loadingSpinner()
+    if (opportunities.length === 0 || id === -1) return loadingSpinner();
+
+    if (opportunity === undefined)
+        return (
+            <Layout className="px-8">
+                <div className="w-full">
+                    <p>Opportunity not found</p>
+                </div>
+            </Layout>
+        );
+
+    let image = bannerImg;
+    if (opportunity.pictureURL && opportunity.pictureURL.length > 0) {
+        const url = opportunity.pictureURL;
+        image = "https://drive.google.com/uc?export=view&id=" + url.substring(url.indexOf("id=") + 3, url.length);
+    }
+
+    let websiteURL = opportunity.websiteURL;
+    if (websiteURL.includes("www.") && !websiteURL.includes("https://")) websiteURL = websiteURL.replace("www.", "https://");
 
     return (
         <Layout className="px-8">
-            <div className="w-full flex flex-row">
-                <div className="w-1/3 space-y-6 pt-8">
-
-                    <div className="flex flex-row gap-3 w-full">
-                        <input id="searchTerm" type="text" className="bg-transparent rounded-lg py-2 px-4 min-w-[70%]" style={{ border: '1px solid lightgray' }} placeholder="Search for opportunities" />
-                        <button className="bg-gray-300 rounded-lg px-3 py-2" onClick={()=>onTodoChangeOpportunitySearchTerm()} ><FiSearch /></button>
+            <div className="grid grid-cols-2">
+                <div className="p-8 py-16 space-y-14">
+                    <div className="space-y-2">
+                        <h1 className="text-2xl font-bold tracking-wide">{opportunity.title}</h1>
+                        <h2 className="text-xl font-semibold text-gray-500">{opportunity.organization}</h2>
                     </div>
 
-                    <div className="w-full space-y-3">
-                        <h3 className="font-semibold text-slate-400">Filter</h3>
+                    <div className="space-y-4">
+                        {opportunityInfo([
+                            { icon: TiGlobeOutline, title: "", detail: opportunity.type, capitalize: true },
+                            { icon: GrLocation, title: "", detail: opportunity.location, capitalize: true },
 
-                        <div className="w-fit py-2 px-4">
-
-                            <div className="flex flex-row gap-3">
-                                <input type="checkbox" id="national-checkbox" value="national" onChange={e => onTodoChangeOpportunityType(e.target.value)}/>
-                                <label htmlFor="national-checkbox" className="text-gray-700">National</label>
-                            </div>
-
-                            <div className="flex flex-row gap-3">
-                                <input type="checkbox" id="international-checkbox" value="international" onChange={e => onTodoChangeOpportunityType(e.target.value)}/>
-                                <label htmlFor="international-checkbox" className="text-gray-700">International</label>
-                            </div>
-                        </div>
+                        ])}
 
 
+                        {opportunityInfo([
+                            { icon: CgWebsite, title: "", detail: websiteURL, website: true }
+                        ])}
+
+                        {opportunityInfo([
+                            { icon: MdDateRange, title: "Deadline : ", detail: formatDate(opportunity.deadlineDate) }
+                        ])}
+
+                        {opportunityInfo([
+                            { icon: MdUpdate, title: "Last Updated : ", detail: formatDate(opportunity.createdDate) }
+                        ])}
                     </div>
+
+                    {opportunityDescription("Education Level", opportunity.educationLevel)}
+                    {opportunityDescription("Description", opportunity.description)}
+                    {opportunityDescription("Benefits", opportunity.benefits)}
+                    {opportunityDescription("Eligibility", opportunity.eligibility)}
+                    {opportunityDescription("Application Process", opportunity.applicatoinProcess)}
+                    {opportunityDescription("Required Documents", opportunity.requiredDocuments, true)}
+                    {opportunityDescription("Additional Information", opportunity.additionalInformation, true)}
+
                 </div>
 
-                <div className="w-full pt-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
-                    {filteredOpportunities.map((opportunity, index) => {
-                        return OpportunityCard(index, opportunity, "upcoming", "opportunity")
-                    })}
-                    </div>
+                <div className="p-8 py-16 cursor-pointer" onClick={() => handleURLClick(websiteURL)}>
+                    <img src={image} />
                 </div>
             </div>
         </Layout>
     );
+}
+
+function opportunityDescription(title: string, description: string, isList?: boolean) {
+    if (description.length === 0 || description === "N/A" || description === ".") return;
+
+    return (<div className="space-y-3">
+        <h3 className="text-lg font-semibold tracking-wide">{title}</h3>
+        <hr />
+
+        {
+            isList
+                ? (
+                    <ul className="space-y-2 list-disc">
+                        {description.split("\n").map((line, idx) => {
+                            if(line.length === 0 || line === "N/A" || line === ".") return <></>;
+                            return <li className="" key={idx} style={{ listStyle: "inherit" }}>{line}</li>
+                        })}
+                    </ul>
+                )
+                : (
+                    <div className="space-y-2">
+                        {description.split("\n").map((line, idx) => {
+                            return <p className="" key={idx}>{line}</p>
+                        })}
+                    </div>
+                )
+        }
+    </div>)
+}
+
+function opportunityInfo(data: OpportunityInfoProp[]) {
+    return (
+        <div className="flex flex-row space-x-5">
+            {data.map((info, idx) => {
+                if (info.detail.length === 0 || info.detail === "N/A" || info.detail === ".") return;
+                return (
+                    < div className="text-gray-500 flex flex-row align-middle space-x-2" key={idx}>
+                        {info.icon && React.createElement(info.icon, { className: "w-6 h-6 text-gray-800" })}
+                        <p>
+                            {info.title.length > 0 && info.title}
+                            <span className="font-semibold text-gray-800">
+                                {
+                                    info.website
+                                        ? <a className="cursor-pointer" onClick={() => { handleURLClick(info.detail) }} >Website</a>
+                                        :
+                                        info.capitalize
+                                            ? info.detail[0].toUpperCase() + info.detail.substring(1).toLowerCase()
+                                            : info.detail
+                                }
+                            </span>
+                        </p>
+                    </div >
+                )
+            })}
+        </div>
+
+    )
 }

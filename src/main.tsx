@@ -8,7 +8,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 
-import { Home, Opportunity, About } from './pages';
+import { Home, OpportunitySearch, Opportunity, About } from './pages';
 
 const router = createHashRouter([
   {
@@ -17,11 +17,15 @@ const router = createHashRouter([
   },
   {
     path: "/opportunity",
-    element: <Opportunity />,
+    element: <OpportunitySearch />,
   },
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/opportunity/:id",
+    element: <Opportunity />,
   }
 ]);
 

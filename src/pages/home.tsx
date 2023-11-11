@@ -3,7 +3,7 @@ import { Layout } from "../template";
 import { useEffect, useState } from "react";
 import { loadingSpinner } from "../components/LoadingSpinner";
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
-import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
+import { formatDate, handleNavLinkClick, handleURLClick, parseDateTimeString } from "./utils";
 
 import bannerImg from '../assets/banner.png';
 
@@ -15,6 +15,7 @@ export type OpportunitySummary = {
 
 export type OpportunityTypes = "national" | "international";
 export type OpportunityProp = {
+    id: number;
     title: string;
     type: OpportunityTypes;
     organization: string;
@@ -43,13 +44,11 @@ export function Home() {
             complete: (result) => {
                 const data = result.data.map((opportunity: any) => {
                     return {
-                        title: opportunity.title,
+                        ...opportunity,
+                        id: parseInt(opportunity.id),
                         type: opportunity.type.toLowerCase() as OpportunityTypes,
-                        organization: opportunity.organization,
                         createdDate: opportunity.createdDate ? parseDateTimeString(opportunity.createdDate) : undefined,
                         deadlineDate: opportunity.deadlineDate ? new Date(opportunity.deadlineDate) : undefined,
-                        description: opportunity.description,
-                        pictureURL: opportunity.pictureURL,
                     }
                 }) as OpportunityProp[];
 
@@ -117,7 +116,7 @@ export function Home() {
                     onFocus={() => { }}
                     autoFocus
                     formatResult={formatResult}
-                    styling={{zIndex: 100}}
+                    styling={{ zIndex: 100 }}
                 />
             </div>
 
@@ -142,7 +141,7 @@ export function Home() {
     );
 }
 
-export function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent", source?:string) {
+export function OpportunityCard(key: number, opportunity: OpportunityProp, cardtype: "upcoming" | "recent", source?: string) {
     const maxDescriptionLength = 150;
 
     let image = opportunity.pictureURL;
@@ -153,10 +152,10 @@ export function OpportunityCard(key: number, opportunity: OpportunityProp, cardt
     }
 
     let defaultClass = "flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-1/3 px-4 py-8"
-    if(source === "opportunity") defaultClass = "flex flex-col py-4 "
+    if (source === "opportunity") defaultClass = "flex flex-col py-4 "
 
     return (
-        <div className={defaultClass} key={key}>
+        <div className={defaultClass} key={key} onClick={() => handleNavLinkClick(`#/opportunity/${opportunity.id}`)}>
             <button className='w-full h-full rounded-lg shadow-md border-0 flex flex-col'>
                 <div className="bg-gray-200 h-64 w-full rounded-lg shadow-sm overflow-hidden"
                     style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
