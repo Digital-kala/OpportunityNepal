@@ -23,6 +23,7 @@ export type OpportunityProp = {
     deadlineDate: Date;
     description: string;
     pictureURL: string;
+    educationLevel: string;
 }
 
 export const opportunityFormURL = 'https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA';
@@ -97,7 +98,7 @@ export function Home() {
     if (opportunities.length === 0 || searchOpportunities.length === 0) return loadingSpinner()
 
     return (
-        <Layout className="px-8 mt-8">
+        <Layout className="px-8 mt-8" pageTitle="Home">
             <div className="bg-gray-200 w-full pt-12 md:pt-[10vh] pb-2 md:pb-[4vh] px-16 rounded-lg shadow-md"
                 style={{ backgroundImage: `url(${bannerImg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} >
                 <div className="flex flex-col p-4 justify-center items-center h-full gap-y-4 mb-4">

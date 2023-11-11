@@ -3,7 +3,8 @@ import { handleNavLinkClick, redirectHome } from "../pages/utils";
 
 type SectionTitleProps = {
     title: string,
-    url: string
+    url: string,
+    active?: boolean,
 }
 
 const movingNavStyles = {
@@ -16,15 +17,15 @@ type NavSectionProps = {
     url: string;
     isSelected: boolean;
     onItemClick: (url: string) => void;
-  };
+};
 
-export function NavBar() {
+export function NavBar({ pageTitle }: { pageTitle?: string }) {
     const [isAtPageTop, setIsAtPageTop] = useState(true);
     let lastScrollTop = 0;
 
     const handleScroll = () => {
         const rootDiv = document.getElementById('root');
-        
+
         if (rootDiv) {
             const scrollTop = rootDiv.scrollTop;
             if (scrollTop === 0) {
@@ -32,10 +33,10 @@ export function NavBar() {
             } else if (lastScrollTop < scrollTop) {
                 setIsAtPageTop(false);
                 const navBar = document.getElementById("navbar")
-                if(navBar){
-                    if(navBar.classList.contains('show-on-scroll')){
+                if (navBar) {
+                    if (navBar.classList.contains('show-on-scroll')) {
                         document.getElementById("navbar")?.classList.replace('show-on-scroll', 'hide-on-scroll')
-                    }else{
+                    } else {
                         navBar.classList.add('hide-on-scroll')
                     }
                 }
@@ -61,29 +62,32 @@ export function NavBar() {
     return (
         <div className="fixed top-0 w-full hidden md:block transition-all duration-200 ease-in-out" id="navbar" style={isAtPageTop ? {} : movingNavStyles}>
             <nav className="flex items-center justify-center py-3 gap-5">
-                <NavSection title={'Home'} url={''}  />
-                <NavSection title={'Search Opportunities'} url={'opportunity'} />
-                <NavSection title={'About Us'} url={'about'} />
+                <NavSection title={'Home'} url={''} active={pageTitle === "Home"} />
+                <NavSection title={'Search Opportunities'} url={'opportunity'} active={pageTitle === "Opportunity"} />
+                <NavSection title={'About Us'} url={'about'} active={pageTitle === "About"} />
             </nav>
         </div>
     )
 }
 
-function NavSection({ title, url }: SectionTitleProps) {
+function NavSection({ title, url, active }: SectionTitleProps) {
 
-    function redirectPage(url:string){
-        if(url === ""){
+    function redirectPage(url: string) {
+        if (url === "") {
             redirectHome();
-        }else{
+        } else {
             handleNavLinkClick(url);
         };
     }
 
     return (
-        <div 
-            className="gap-1.5 mr-8 flex cursor-pointer p-2 text-sm hover:text-sky-400"
-            onClick={()=>redirectPage(url)} >
-            <p className="whitespace-nowrap sfmono-reg">{title}</p>
+        <div
+            className="gap-1.5 mr-8 flex cursor-pointer p-2 text-sm "
+            onClick={() => redirectPage(url)} >
+            {active
+                ? <p className="whitespace-nowrap sfmono-reg font-semibold hover-underline-animation text-sky-500">{title}</p>
+                : <p className="whitespace-nowrap sfmono-reg font-semibold hover-underline-animation hover:text-sky-500">{title}</p>
+            }
         </div>
     )
 }

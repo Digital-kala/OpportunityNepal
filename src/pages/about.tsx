@@ -2,7 +2,7 @@ import { Layout } from "../template";
 
 export function About() {
     return (
-        <Layout>
+        <Layout pageTitle="About">
             <div className="bg_website_blue w-full py-12 px-16">
                 <div className="flex flex-col p-10  justify-center items-center h-full gap-y-2 ">
                     <h1 className="text-6xl text-slate-50 font-bold	tracking-wide">Know about <span className ="website_yellow">us!</span> </h1>
