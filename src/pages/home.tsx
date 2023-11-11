@@ -13,9 +13,10 @@ export type OpportunitySummary = {
     name: string;
 }
 
+export type OpportunityTypes = "national" | "international";
 export type OpportunityProp = {
     title: string;
-    type: string;
+    type: OpportunityTypes;
     organization: string;
     createdDate: Date;
     deadlineDate: Date;
@@ -43,7 +44,7 @@ export function Home() {
                 const data = result.data.map((opportunity: any) => {
                     return {
                         title: opportunity.title,
-                        type: opportunity.type,
+                        type: opportunity.type.toLowerCase() as OpportunityTypes,
                         organization: opportunity.organization,
                         createdDate: opportunity.createdDate ? parseDateTimeString(opportunity.createdDate) : undefined,
                         deadlineDate: opportunity.deadlineDate ? new Date(opportunity.deadlineDate) : undefined,
