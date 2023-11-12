@@ -40,7 +40,6 @@ type OpportunityInfoProp = {
     title: string;
     detail: string;
     capitalize?: boolean;
-    website?: boolean;
 }
 
 export function Opportunity() {
@@ -109,13 +108,22 @@ export function Opportunity() {
     return (
         <Layout className="px-8">
             <div className="p-8 py-16 space-y-14 max-w-6xl m-auto">
-                <div className="grid grid-cols-2">
-                    <div className="space-y-14">
-                        <div className="space-y-2">
-                            <h1 className="text-2xl font-bold tracking-wide">{opportunity.title}</h1>
-                            <h2 className="text-xl font-semibold text-gray-500">{opportunity.organization}</h2>
-                        </div>
+                <div className="cursor-pointer justify-center flex px-5c" onClick={() => handleURLClick(websiteURL)}>
+                    <img src={image} className="max-h-[30vh] rounded-lg w-full" style={{ objectFit: 'cover', objectPosition:'top' }} />
+                </div>
 
+                <div className="space-y-14">
+                    <div className="space-y-2">
+                        <h1 className="text-2xl font-bold tracking-wide">{opportunity.title}</h1>
+                        <h2 className="text-xl font-semibold text-gray-500 pb-2">{opportunity.organization}</h2>
+
+                        <button className="flex flex-row align-middle space-x-4 text-white bg-sky-400 px-3 py-2 rounded-lg" onClick={() => handleURLClick(websiteURL)}>
+                            <CgWebsite className="w-6 h-6" />
+                            <a className="cursor-pointer font-semibold" onClick={() => { }} >Website</a>
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-2">
                         <div className="space-y-4">
                             {opportunityInfo([
                                 { icon: TiGlobeOutline, title: "", detail: opportunity.type, capitalize: true },
@@ -125,10 +133,6 @@ export function Opportunity() {
 
 
                             {opportunityInfo([
-                                { icon: CgWebsite, title: "", detail: websiteURL, website: true }
-                            ])}
-
-                            {opportunityInfo([
                                 { icon: MdDateRange, title: "Deadline : ", detail: formatDate(opportunity.deadlineDate) }
                             ])}
 
@@ -136,15 +140,12 @@ export function Opportunity() {
                                 { icon: MdUpdate, title: "Last Updated : ", detail: formatDate(opportunity.createdDate) }
                             ])}
                         </div>
-                    </div>
 
-                    <div className="cursor-pointer justify-center flex px-5c" onClick={() => handleURLClick(websiteURL)}>
-                        <img src={image} className="max-h-[50vh] rounded-lg w-fit"/>
+                        {opportunityDescription("Education Level", opportunity.educationLevel)}
                     </div>
                 </div>
 
 
-                {opportunityDescription("Education Level", opportunity.educationLevel)}
                 {opportunityDescription("Description", opportunity.description)}
                 {opportunityDescription("Benefits", opportunity.benefits)}
                 {opportunityDescription("Eligibility", opportunity.eligibility)}
@@ -198,12 +199,9 @@ function opportunityInfo(data: OpportunityInfoProp[]) {
                             {info.title.length > 0 && info.title}
                             <span className="font-semibold text-gray-800">
                                 {
-                                    info.website
-                                        ? <a className="cursor-pointer" onClick={() => { handleURLClick(info.detail) }} >Website</a>
-                                        :
-                                        info.capitalize
-                                            ? info.detail[0].toUpperCase() + info.detail.substring(1).toLowerCase()
-                                            : info.detail
+                                    info.capitalize
+                                        ? info.detail[0].toUpperCase() + info.detail.substring(1).toLowerCase()
+                                        : info.detail
                                 }
                             </span>
                         </p>
