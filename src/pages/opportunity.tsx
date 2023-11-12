@@ -72,7 +72,6 @@ export function Opportunity() {
         });
 
         const id = window.location.hash.split("/")[2];
-        console.log(window.location.hash.split("/"), id);
         setId(parseInt(id));
     }, []);
 
@@ -109,48 +108,52 @@ export function Opportunity() {
 
     return (
         <Layout className="px-8">
-            <div className="grid grid-cols-2">
-                <div className="p-8 py-16 space-y-14">
-                    <div className="space-y-2">
-                        <h1 className="text-2xl font-bold tracking-wide">{opportunity.title}</h1>
-                        <h2 className="text-xl font-semibold text-gray-500">{opportunity.organization}</h2>
+            <div className="p-8 py-16 space-y-14 max-w-6xl m-auto">
+                <div className="grid grid-cols-2">
+                    <div className="space-y-14">
+                        <div className="space-y-2">
+                            <h1 className="text-2xl font-bold tracking-wide">{opportunity.title}</h1>
+                            <h2 className="text-xl font-semibold text-gray-500">{opportunity.organization}</h2>
+                        </div>
+
+                        <div className="space-y-4">
+                            {opportunityInfo([
+                                { icon: TiGlobeOutline, title: "", detail: opportunity.type, capitalize: true },
+                                { icon: GrLocation, title: "", detail: opportunity.location, capitalize: true },
+
+                            ])}
+
+
+                            {opportunityInfo([
+                                { icon: CgWebsite, title: "", detail: websiteURL, website: true }
+                            ])}
+
+                            {opportunityInfo([
+                                { icon: MdDateRange, title: "Deadline : ", detail: formatDate(opportunity.deadlineDate) }
+                            ])}
+
+                            {opportunityInfo([
+                                { icon: MdUpdate, title: "Last Updated : ", detail: formatDate(opportunity.createdDate) }
+                            ])}
+                        </div>
                     </div>
 
-                    <div className="space-y-4">
-                        {opportunityInfo([
-                            { icon: TiGlobeOutline, title: "", detail: opportunity.type, capitalize: true },
-                            { icon: GrLocation, title: "", detail: opportunity.location, capitalize: true },
-
-                        ])}
-
-
-                        {opportunityInfo([
-                            { icon: CgWebsite, title: "", detail: websiteURL, website: true }
-                        ])}
-
-                        {opportunityInfo([
-                            { icon: MdDateRange, title: "Deadline : ", detail: formatDate(opportunity.deadlineDate) }
-                        ])}
-
-                        {opportunityInfo([
-                            { icon: MdUpdate, title: "Last Updated : ", detail: formatDate(opportunity.createdDate) }
-                        ])}
+                    <div className="cursor-pointer justify-center flex px-5c" onClick={() => handleURLClick(websiteURL)}>
+                        <img src={image} className="max-h-[50vh] rounded-lg w-fit"/>
                     </div>
-
-                    {opportunityDescription("Education Level", opportunity.educationLevel)}
-                    {opportunityDescription("Description", opportunity.description)}
-                    {opportunityDescription("Benefits", opportunity.benefits)}
-                    {opportunityDescription("Eligibility", opportunity.eligibility)}
-                    {opportunityDescription("Application Process", opportunity.applicatoinProcess)}
-                    {opportunityDescription("Required Documents", opportunity.requiredDocuments, true)}
-                    {opportunityDescription("Additional Information", opportunity.additionalInformation, true)}
-
                 </div>
 
-                <div className="p-8 py-16 cursor-pointer" onClick={() => handleURLClick(websiteURL)}>
-                    <img src={image} />
-                </div>
+
+                {opportunityDescription("Education Level", opportunity.educationLevel)}
+                {opportunityDescription("Description", opportunity.description)}
+                {opportunityDescription("Benefits", opportunity.benefits)}
+                {opportunityDescription("Eligibility", opportunity.eligibility)}
+                {opportunityDescription("Application Process", opportunity.applicatoinProcess)}
+                {opportunityDescription("Required Documents", opportunity.requiredDocuments, true)}
+                {opportunityDescription("Additional Information", opportunity.additionalInformation, true)}
+
             </div>
+
         </Layout>
     );
 }
@@ -167,7 +170,7 @@ function opportunityDescription(title: string, description: string, isList?: boo
                 ? (
                     <ul className="space-y-2 list-disc">
                         {description.split("\n").map((line, idx) => {
-                            if(line.length === 0 || line === "N/A" || line === ".") return <></>;
+                            if (line.length === 0 || line === "N/A" || line === ".") return <></>;
                             return <li className="" key={idx} style={{ listStyle: "inherit" }}>{line}</li>
                         })}
                     </ul>

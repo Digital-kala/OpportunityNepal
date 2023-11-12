@@ -11,6 +11,7 @@ import bannerImg from '../assets/banner.png';
 export type OpportunitySummary = {
     id: number;
     name: string;
+    opportunityId: number;
 }
 
 export type OpportunityTypes = "national" | "international";
@@ -65,7 +66,8 @@ export function Home() {
         const searchOpportunities = opportunities.map((opportunity, idx) => {
             return {
                 id: idx,
-                name: opportunity.title
+                name: opportunity.title,
+                opportunityId: opportunity.id,
             } as OpportunitySummary
         });
         setSearchOpportunities(searchOpportunities);
@@ -111,10 +113,10 @@ export function Home() {
                 </div>
                 <ReactSearchAutocomplete
                     items={searchOpportunities}
-                    onSearch={() => { }}
+                    onSearch={() => {}}
                     onHover={() => { }}
-                    onSelect={() => { }}
-                    onFocus={() => { }}
+                    onSelect={(e) => handleNavLinkClick(`#/opportunity/${e.opportunityId}`)}
+                    onFocus={() => {}}
                     autoFocus
                     formatResult={formatResult}
                     styling={{ zIndex: 100 }}
