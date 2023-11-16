@@ -107,7 +107,7 @@ export function Opportunity() {
 
     return (
         <Layout className="px-8">
-            <div className="p-8 py-16 space-y-14 max-w-6xl m-auto">
+            <div className="p-0 md:p-8 py-16 space-y-14 max-w-6xl m-auto">
                 <div className="cursor-pointer justify-center flex px-5c" onClick={() => handleURLClick(websiteURL)}>
                     <img src={image} className="max-h-[30vh] rounded-lg w-full" style={{ objectFit: 'cover', objectPosition:'top' }} />
                 </div>
@@ -123,7 +123,7 @@ export function Opportunity() {
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2">
                         <div className="space-y-4">
                             {opportunityInfo([
                                 { icon: TiGlobeOutline, title: "", detail: opportunity.type, capitalize: true },
@@ -141,7 +141,9 @@ export function Opportunity() {
                             ])}
                         </div>
 
-                        {opportunityDescription("Education Level", opportunity.educationLevel)}
+                        <div className="pt-12 md:pt-0">
+                            {opportunityDescription("Education Level", opportunity.educationLevel)}
+                        </div>
                     </div>
                 </div>
 

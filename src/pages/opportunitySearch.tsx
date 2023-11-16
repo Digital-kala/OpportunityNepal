@@ -127,23 +127,22 @@ export function OpportunitySearch() {
 
     return (
         <Layout className="px-8" pageTitle="Opportunity">
-            <div className="w-full flex flex-row">
-                <div className="w-1/3 space-y-6 pt-8">
+            <div className="w-full md:flex">
+                <div className="w-full md:w-1/3  space-y-6 pt-8">
 
-                    <div className="flex flex-row gap-3 w-full">
+                    <div className="flex flex-row gap-3 w-full md:pr-8 lg:pr-0">
                         <input id="searchTerm" type="text" className="bg-transparent rounded-lg py-2 px-4 min-w-[70%]" style={{ border: '1px solid lightgray' }} placeholder="Search for opportunities" />
                         <button className="bg-gray-300 rounded-lg px-3 py-2" onClick={() => onTodoChangeOpportunitySearchTerm()} ><FiSearch /></button>
                     </div>
 
-                    <div className="w-full space-y-3">
-                        <h3 className="font-semibold text-slate-400">Filter</h3>
-
-                        <fieldset className="w-3/4 py-2 px-4 border-2 rounded-lg space-y-1">
+                    <h3 className="font-semibold text-slate-400">Filter</h3>
+                    <div className="w-full gap-3 grid grid-cols-2 md:grid-cols-1  pr-0 md:pr-8">
+                        <fieldset className="w-full py-2 px-4 border-2 rounded-lg space-y-1">
                             {createCheckBox("National", true, onTodoChangeOpportunityType)}
                             {createCheckBox("International", true, onTodoChangeOpportunityType)}
                         </fieldset>
 
-                        <fieldset className="w-3/4 py-2 px-4 border-2 rounded-lg space-y-1">
+                        <fieldset className="w-full py-2 px-4 border-2 rounded-lg space-y-1">
                             {createCheckBox("High School", false, onTodoChangeOpportunityEducationLevel)}
                             {createCheckBox("Bachelors", false, onTodoChangeOpportunityEducationLevel)}
                             {createCheckBox("Masters", false, onTodoChangeOpportunityEducationLevel)}
