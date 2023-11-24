@@ -203,3 +203,9 @@ input {
     transform: translate(-50%, -85%) scale(0.8) rotate(45deg);
   }
 }
+
+.cartoonify {
+  text-shadow: 0 0 5px #000; /* horizontal-offset vertical-offset 'blur' colour */
+  -moz-text-shadow: 0 0 5px #000;
+  -webkit-text-shadow: 0 0 5px #000;
+}
