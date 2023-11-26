@@ -142,8 +142,9 @@ export function Home() {
           className="flex flex-col p-4 justify-center items-center h-full gap-y-4 mb-4 font-bold"
           style={{ textShadow: "0px 0 8px black" }}
         >
-          <h1 className="text-3xl tracking-wide website_yellow drop-shadow-md cartoonify text-center">
-            Explore New Opportunities!
+          <h1 className=" text-3xl md:text-5xl tracking-wide text-center">
+              <span className="text-yellow-500">Explore</span>
+              <span className="text-white"> New Opportunities!</span>
           </h1>
           <p className="text-gray-200 text-lg drop-shadow-md cartoonify">Or</p>
           <button
