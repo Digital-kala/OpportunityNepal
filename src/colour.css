@@ -1,19 +1,26 @@
 .website_blue{
-    color: #3898F3;
-  }
-  
-  .bg_website_blue{
-    background-color: #3898F3;
-  }
-
-.website_yellow {
-    color: #FACC04
-}  
-
-.website_dblue {
-    color: #0B2C4E
+  color: #376C9C;
+}
+ .bg_website_blue{
+  background-color: #376C9C;
 }
 
+
+.website_yellow {
+  color: #FACC04
+} 
+
+
+.website_dblue {
+  color: #0B2C4E
+}
+
+
 .bg_website_dblue{
-    background-color: #0B2C4E;
+  background-color: #0B2C4E;
+}
+
+
+.bg_website_ddblue{
+background-color: #376C9C;
 }
