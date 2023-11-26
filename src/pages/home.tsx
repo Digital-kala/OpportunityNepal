@@ -33,10 +33,11 @@ export type OpportunityProp = {
 
 export const opportunityFormURL =
   "https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA";
+
 export const dataPath =
   process.env.NODE_ENV === "development"
     ? "../../data/data.csv"
-    : "https://digital-kala.github.io/OpportunityNepal.github.io/data/data.csv";
+    : "https://www.nepalesescholarshiphub.com/data/data.csv";
 
 export function Home() {
   const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>(

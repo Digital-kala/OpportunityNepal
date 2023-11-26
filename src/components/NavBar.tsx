@@ -20,6 +20,7 @@ type SectionTitleProps = {
 const movingNavStyles = {
   boxShadow: "0px 0px 8px  black",
   offset: "x 0",
+  zIndex: 300,
 };
 
 type NavSectionProps = {
@@ -74,7 +75,7 @@ export function NavBar({ pageTitle }: { pageTitle?: string }) {
 
   return (
     <div
-      className="fixed top-0 w-full h-[12vh] md:h-[8vh] transition-all duration-200 ease-in-out"
+      className="fixed top-0 w-full md:h-[8vh] transition-all duration-200 ease-in-out"
       id="navbar"
       style={isAtPageTop ? {} : movingNavStyles}
     >
