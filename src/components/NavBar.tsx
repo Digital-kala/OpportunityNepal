@@ -69,7 +69,7 @@ export function NavBar({ pageTitle }: { pageTitle?: string }) {
 
   return (
     <div
-      className="fixed bottom-0 md:top-0 w-full h-[10vh] md:h-[8vh] transition-all duration-200 ease-in-out"
+      className="fixed top-0 w-full h-[12vh] md:h-[8vh] transition-all duration-200 ease-in-out"
       id="navbar"
       style={isAtPageTop ? {} : movingNavStyles}
     >
