@@ -207,9 +207,11 @@ export function OpportunityCard(
 
   let image = opportunity.pictureURL;
   if (image && image.length > 0) {
-    image =
-      "https://drive.google.com/uc?export=view&id=" +
-      image.substring(image.indexOf("id=") + 3, image.length);
+    let id = "";
+    if (image.includes("id=")) id = image.substring(image.indexOf("id=") + 3, image.length);
+    else id = image.substring(image.indexOf("/d/") + 3, image.indexOf("/view"));
+
+    image ="https://drive.google.com/uc?export=view&id=" + id;
   } else {
     image = bannerImg;
   }
@@ -231,6 +233,7 @@ export function OpportunityCard(
             backgroundImage: `url(${image})`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
+            backgroundColor:'white',
           }}
         />
         <div className="flex flex-col p-4">

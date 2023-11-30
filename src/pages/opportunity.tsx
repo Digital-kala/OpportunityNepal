@@ -100,9 +100,11 @@ export function Opportunity() {
   let image = bannerImg;
   if (opportunity.pictureURL && opportunity.pictureURL.length > 0) {
     const url = opportunity.pictureURL;
-    image =
-      "https://drive.google.com/uc?export=view&id=" +
-      url.substring(url.indexOf("id=") + 3, url.length);
+    let id = "";
+    if (url.includes("id=")) id = url.substring(url.indexOf("id=") + 3, url.length);
+    else id = url.substring(url.indexOf("/d/") + 3, url.indexOf("/view"));
+
+    image ="https://drive.google.com/uc?export=view&id=" + id;
   }
 
   let websiteURL = opportunity.websiteURL;
