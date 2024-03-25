@@ -211,7 +211,7 @@ export function OpportunityCard(
     if (image.includes("id=")) id = image.substring(image.indexOf("id=") + 3, image.length);
     else id = image.substring(image.indexOf("/d/") + 3, image.indexOf("/view"));
 
-    image ="https://drive.google.com/uc?export=view&id=" + id;
+    image = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   } else {
     image = bannerImg;
   }

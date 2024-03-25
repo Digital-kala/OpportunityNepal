@@ -104,7 +104,7 @@ export function Opportunity() {
     if (url.includes("id=")) id = url.substring(url.indexOf("id=") + 3, url.length);
     else id = url.substring(url.indexOf("/d/") + 3, url.indexOf("/view"));
 
-    image ="https://drive.google.com/uc?export=view&id=" + id;
+    image = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   }
 
   let websiteURL = opportunity.websiteURL;
