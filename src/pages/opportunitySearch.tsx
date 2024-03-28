@@ -80,6 +80,11 @@ export function OpportunitySearch() {
       )
         return false;
 
+      if (opportunity.deadlineDate && opportunity.deadlineDate <=  new Date())
+        return false;
+  
+    
+
       // filter by education level if given by the user otherwise use the complete list
       if (filteringOptions.educationLevel.length > 0) {
         for (const level of filteringOptions.educationLevel) {

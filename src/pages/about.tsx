@@ -9,7 +9,7 @@ const teamMembers = [
   { name: "Aastha Acharya", role: "Core Team", image: aastha },
   { name: "Dipa Rai", role: "Core Team", image: dipa },
   { name: "Labbi Karmacharya", role: "Core Team", image: labbi },
-  { name: "Animesh Singh Basnet", role: "Web Developer", image: anon },
+  { name: "Animesh Singh Basnet", role: "Core Team", image: anon },
   { name: "Unika Karmacharya", role: "Volunteering Leader", image: anon },
   { name: "Arpana Dhakal", role: "Volunteer", image: anon },
   { name: "Chandraa Kumari Pandey", role: "Volunteer", image: anon },

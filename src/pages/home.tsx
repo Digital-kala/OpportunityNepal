@@ -9,6 +9,8 @@ import {
   handleURLClick,
   parseDateTimeString,
 } from "./utils";
+import axios from 'axios';
+import moment from 'moment';
 
 import bannerImg from "../assets/banner.png";
 
@@ -38,6 +40,7 @@ export const dataPath =
   process.env.NODE_ENV === "development"
     ? "../../data/data.csv"
     : "https://www.nepalesescholarshiphub.com/data/data.csv";
+    
 
 export function Home() {
   const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>(
@@ -107,7 +110,9 @@ export function Home() {
     // find and add recently added opportunities
     let recentlyAddedOppor = opportunities.filter(
       (opportunity) =>
-        opportunity.createdDate && opportunity.createdDate instanceof Date
+        opportunity.createdDate &&
+        opportunity.createdDate instanceof Date &&
+        opportunity.deadlineDate > new Date()
     );
     if (recentlyAddedOppor.length > 1) {
       recentlyAddedOppor = recentlyAddedOppor.sort((a, b) =>
