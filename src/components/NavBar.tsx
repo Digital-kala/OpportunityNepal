@@ -81,7 +81,7 @@ export function NavBar({ pageTitle }: { pageTitle?: string }) {
     >
       
 
-<nav className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 ">
+<nav className="bg-white fixed w-full z-20 top-0 start-0">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <a href="" className="flex items-center space-x- rtl:space-x-reverse">
       <img src={Logo} className="h-10" alt="Nepalese Scholarship Hub Logo"></img>

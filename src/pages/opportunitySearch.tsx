@@ -18,6 +18,25 @@ type filteringOptions = {
   educationLevel: Array<string>;
 };
 
+function sortOpportunities(opportunities: Array<OpportunityProp>) {
+  if (opportunities.length === 0) return [];
+
+  // sort opportunities with the nearest deadline first that have a deadline
+  let filtered = opportunities.filter(
+    (opportunity) => opportunity.deadlineDate !== undefined
+  ).sort((a, b) => (a.deadlineDate < b.deadlineDate ? -1 : 1));
+
+  // add opportunities without a deadline at the end
+  filtered = [
+    ...filtered,
+    ...opportunities.filter(
+      (opportunity) => opportunity.deadlineDate === undefined
+    ),
+  ];
+
+  return filtered;
+}
+
 export function OpportunitySearch() {
   const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>(
     []
@@ -63,7 +82,7 @@ export function OpportunitySearch() {
   useEffect(() => {
     if (opportunities.length === 0) return;
 
-    setFilteredOpportunities(opportunities);
+    setFilteredOpportunities(sortOpportunities(opportunities));
   }, [opportunities.length]);
 
   useEffect(() => {
@@ -109,7 +128,7 @@ export function OpportunitySearch() {
       return true;
     });
 
-    setFilteredOpportunities(filtered);
+    setFilteredOpportunities(sortOpportunities(filtered));
   }, [filteringOptions]);
 
   function onTodoChangeOpportunityType(value: string) {
@@ -178,6 +197,7 @@ export function OpportunitySearch() {
               className="bg-transparent rounded-lg py-2 px-4 min-w-[80%]"
               style={{ border: "1px solid lightgray" }}
               placeholder="Search for opportunities"
+              onKeyDown={(e) => e.key === "Enter" && onTodoChangeOpportunitySearchTerm()}
             />
             <button
               className="bg-gray-300 rounded-lg px-3 py-2"
