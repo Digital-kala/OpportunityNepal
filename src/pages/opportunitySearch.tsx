@@ -36,7 +36,7 @@ export function OpportunitySearch() {
       download: true,
       header: true,
       complete: (result) => {
-        const data = result.data.map((opportunity: any) => {
+        let data = result.data.map((opportunity: any) => {
           return {
             ...opportunity,
             id: parseInt(opportunity.id),
@@ -49,6 +49,12 @@ export function OpportunitySearch() {
               : undefined,
           };
         }) as OpportunityProp[];
+        data = data.filter(
+          (opportunity) =>
+            opportunity.deadlineDate === undefined ||
+            (opportunity.deadlineDate instanceof Date &&
+            opportunity.deadlineDate >= new Date())
+        );
         setOpportunities(data);
       },
     });
@@ -163,13 +169,13 @@ export function OpportunitySearch() {
 
   return (
     <Layout className="px-8" pageTitle="Opportunity">
-      <div className="w-full md:flex">
+      <div className="w-full md:flex pt-12 md:pt-0 mt-8 md:mt-0">
         <div className="w-full md:w-1/3  space-y-6 pt-8">
           <div className="flex flex-row gap-3 w-full md:pr-8 lg:pr-0">
             <input
               id="searchTerm"
               type="text"
-              className="bg-transparent rounded-lg py-2 px-4 min-w-[70%]"
+              className="bg-transparent rounded-lg py-2 px-4 min-w-[80%]"
               style={{ border: "1px solid lightgray" }}
               placeholder="Search for opportunities"
             />
