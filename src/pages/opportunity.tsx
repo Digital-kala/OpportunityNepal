@@ -3,7 +3,8 @@ import { Layout } from "../template";
 import React, { useEffect, useState } from "react";
 import { formatDate, handleURLClick, parseDateTimeString } from "./utils";
 import { loadingSpinner } from "../components/LoadingSpinner";
-import { OpportunityTypes, dataPath } from "./home";
+import { OpportunityTypes, spreadsheetId, options } from "./home";
+import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
 import { IconType } from "react-icons";
 import { TiGlobeOutline } from "react-icons/ti";
@@ -49,12 +50,14 @@ export function Opportunity() {
   const [opportunity, setOpportunity] = useState<OpportunityProp>();
 
   useEffect(() => {
-    Papa.parse(dataPath, {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const data = result.data.map((opportunity: any) => {
-          return {
+    const parser = new PublicGoogleSheetsParser(spreadsheetId, options);
+    const data = [] as OpportunityProp[];
+
+    parser
+      .parse()
+      .then((opportunities: any) => {
+        opportunities.forEach((opportunity: any) => {
+          data.push({
             ...opportunity,
             id: parseInt(opportunity.id),
             type: opportunity.type.toLowerCase() as OpportunityTypes,
@@ -64,12 +67,13 @@ export function Opportunity() {
             deadlineDate: opportunity.deadlineDate
               ? new Date(opportunity.deadlineDate)
               : undefined,
-          };
-        }) as OpportunityProp[];
-
+          });
+        });
         setOpportunities(data);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     const id = window.location.hash.split("/")[2];
     setId(parseInt(id));
@@ -101,7 +105,8 @@ export function Opportunity() {
   if (opportunity.pictureURL && opportunity.pictureURL.length > 0) {
     const url = opportunity.pictureURL;
     let id = "";
-    if (url.includes("id=")) id = url.substring(url.indexOf("id=") + 3, url.length);
+    if (url.includes("id="))
+      id = url.substring(url.indexOf("id=") + 3, url.length);
     else id = url.substring(url.indexOf("/d/") + 3, url.indexOf("/view"));
 
     image = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
@@ -215,6 +220,7 @@ function opportunityDescription(
   description: string,
   isList?: boolean
 ) {
+  if (description === undefined) return;
   if (description.length === 0 || description === "N/A" || description === ".")
     return;
 

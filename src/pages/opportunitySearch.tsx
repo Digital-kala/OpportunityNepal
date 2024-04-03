@@ -8,8 +8,10 @@ import {
   OpportunityCard,
   OpportunityProp,
   OpportunityTypes,
-  dataPath,
+  spreadsheetId,
+  options,
 } from "./home";
+import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
 type educationLevel = ["High School", "Bachelors", "Masters", "P.H.D"];
 type filteringOptions = {
@@ -22,9 +24,9 @@ function sortOpportunities(opportunities: Array<OpportunityProp>) {
   if (opportunities.length === 0) return [];
 
   // sort opportunities with the nearest deadline first that have a deadline
-  let filtered = opportunities.filter(
-    (opportunity) => opportunity.deadlineDate !== undefined
-  ).sort((a, b) => (a.deadlineDate < b.deadlineDate ? -1 : 1));
+  let filtered = opportunities
+    .filter((opportunity) => opportunity.deadlineDate !== undefined)
+    .sort((a, b) => (a.deadlineDate < b.deadlineDate ? -1 : 1));
 
   // add opportunities without a deadline at the end
   filtered = [
@@ -51,12 +53,14 @@ export function OpportunitySearch() {
   });
 
   useEffect(() => {
-    Papa.parse(dataPath, {
-      download: true,
-      header: true,
-      complete: (result) => {
-        let data = result.data.map((opportunity: any) => {
-          return {
+    const parser = new PublicGoogleSheetsParser(spreadsheetId, options);
+    let data = [] as OpportunityProp[];
+
+    parser
+      .parse()
+      .then((opportunities: any) => {
+        opportunities.forEach((opportunity: any) => {
+          data.push({
             ...opportunity,
             id: parseInt(opportunity.id),
             type: opportunity.type.toLowerCase() as OpportunityTypes,
@@ -66,17 +70,20 @@ export function OpportunitySearch() {
             deadlineDate: opportunity.deadlineDate
               ? new Date(opportunity.deadlineDate)
               : undefined,
-          };
-        }) as OpportunityProp[];
+          });
+        });
+
         data = data.filter(
           (opportunity) =>
             opportunity.deadlineDate === undefined ||
             (opportunity.deadlineDate instanceof Date &&
-            opportunity.deadlineDate >= new Date())
+              opportunity.deadlineDate >= new Date())
         );
         setOpportunities(data);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
@@ -105,10 +112,8 @@ export function OpportunitySearch() {
       )
         return false;
 
-      if (opportunity.deadlineDate && opportunity.deadlineDate <=  new Date())
+      if (opportunity.deadlineDate && opportunity.deadlineDate <= new Date())
         return false;
-  
-    
 
       // filter by education level if given by the user otherwise use the complete list
       if (filteringOptions.educationLevel.length > 0) {
@@ -197,7 +202,9 @@ export function OpportunitySearch() {
               className="bg-transparent rounded-lg py-2 px-4 min-w-[80%]"
               style={{ border: "1px solid lightgray" }}
               placeholder="Search for opportunities"
-              onKeyDown={(e) => e.key === "Enter" && onTodoChangeOpportunitySearchTerm()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && onTodoChangeOpportunitySearchTerm()
+              }
             />
             <button
               className="bg-gray-300 rounded-lg px-3 py-2"

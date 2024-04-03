@@ -1,4 +1,3 @@
-import Papa from "papaparse";
 import { Layout } from "../template";
 import { useEffect, useState } from "react";
 import { loadingSpinner } from "../components/LoadingSpinner";
@@ -9,8 +8,7 @@ import {
   handleURLClick,
   parseDateTimeString,
 } from "./utils";
-import axios from 'axios';
-import moment from 'moment';
+import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
 import bannerImg from "../assets/banner.png";
 
@@ -33,14 +31,10 @@ export type OpportunityProp = {
   educationLevel: string;
 };
 
+export const spreadsheetId = "1sa2EtdgIujZIpl8FWFGWn1zMbFg-T51xfkBh_Zq67Xc";
+export const options = { sheetName: "data", useFormat: true };
 export const opportunityFormURL =
   "https://formfacade.com/public/113161832885328299725/all/form/1FAIpQLSe101GEUyjj6IVtN_Yx-xammIvkgEME92OCcRBb-YS8P-c1UA";
-
-export const dataPath =
-  process.env.NODE_ENV === "development"
-    ? "../../data/data.csv"
-    : "https://www.nepalesescholarshiphub.com/data/data.csv";
-    
 
 export function Home() {
   const [opportunities, setOpportunities] = useState<Array<OpportunityProp>>(
@@ -57,12 +51,14 @@ export function Home() {
   >([]);
 
   useEffect(() => {
-    Papa.parse(dataPath, {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const data = result.data.map((opportunity: any) => {
-          return {
+    const parser = new PublicGoogleSheetsParser(spreadsheetId, options);
+    const data = [] as OpportunityProp[];
+
+    parser
+      .parse()
+      .then((opportunities: any) => {
+        opportunities.forEach((opportunity: any) => {
+          data.push({
             ...opportunity,
             id: parseInt(opportunity.id),
             type: opportunity.type.toLowerCase() as OpportunityTypes,
@@ -72,12 +68,13 @@ export function Home() {
             deadlineDate: opportunity.deadlineDate
               ? new Date(opportunity.deadlineDate)
               : undefined,
-          };
-        }) as OpportunityProp[];
-
+          });
+        });
         setOpportunities(data);
-      },
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
@@ -149,31 +146,31 @@ export function Home() {
           style={{ textShadow: "0px 0 8px black" }}
         >
           <h1 className=" text-3xl md:text-5xl tracking-wide text-center">
-              <span className="text-yellow-500">Explore</span>
-              <span className="text-white"> New Opportunities!</span>
+            <span className="text-yellow-500">Explore</span>
+            <span className="text-white"> New Opportunities!</span>
           </h1>
           <p className="text-gray-200 text-lg drop-shadow-md cartoonify">Or</p>
           <button
             className="px-4 py-2 text-md bg-gray-200/95 rounded-lg website_blue"
-            style={{zIndex: 2, boxShadow: "0px 0 2px black"}}
+            style={{ zIndex: 2, boxShadow: "0px 0 2px black" }}
             onClick={() => handleURLClick(opportunityFormURL)}
           >
             Post An Opportunity
           </button>
         </div>
         <div className="pb-5">
-        <ReactSearchAutocomplete
-          items={searchOpportunities}
-          onSearch={() => {}}
-          onHover={() => {}}
-          onSelect={(e) =>
-            handleNavLinkClick(`#/opportunity/${e.opportunityId}`)
-          }
-          onFocus={() => {}}
-          autoFocus
-          formatResult={formatResult}
-          styling={{ zIndex: 100}}
-        />
+          <ReactSearchAutocomplete
+            items={searchOpportunities}
+            onSearch={() => {}}
+            onHover={() => {}}
+            onSelect={(e) =>
+              handleNavLinkClick(`#/opportunity/${e.opportunityId}`)
+            }
+            onFocus={() => {}}
+            autoFocus
+            formatResult={formatResult}
+            styling={{ zIndex: 100 }}
+          />
         </div>
       </div>
 
@@ -213,7 +210,8 @@ export function OpportunityCard(
   let image = opportunity.pictureURL;
   if (image && image.length > 0) {
     let id = "";
-    if (image.includes("id=")) id = image.substring(image.indexOf("id=") + 3, image.length);
+    if (image.includes("id="))
+      id = image.substring(image.indexOf("id=") + 3, image.length);
     else id = image.substring(image.indexOf("/d/") + 3, image.indexOf("/view"));
 
     image = `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
@@ -238,7 +236,7 @@ export function OpportunityCard(
             backgroundImage: `url(${image})`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
-            backgroundColor:'white',
+            backgroundColor: "white",
           }}
         />
         <div className="flex flex-col p-4">
@@ -250,7 +248,7 @@ export function OpportunityCard(
               ? "Deadline : " + formatDate(opportunity.deadlineDate)
               : "Added on " + formatDate(opportunity.createdDate)}
           </p>
-          
+
           <p className="text-gray-800 text-justify px-4 pb-2 text-sm">
             {opportunity.description.length > maxDescriptionLength
               ? opportunity.description.substring(0, maxDescriptionLength) +
