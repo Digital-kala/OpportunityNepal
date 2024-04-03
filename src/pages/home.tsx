@@ -190,7 +190,9 @@ export function Home() {
           Recently Added
         </h1>
         <div className="flex p-y-4 overflow-x-auto">
-          {recentlyAddedOpportunities.map((opportunity, index) => {
+          {recentlyAddedOpportunities.sort((a, b) =>
+            a.createdDate > b.createdDate ? -1 : 1
+          ).map((opportunity, index) => {
             return OpportunityCard(index, opportunity, "recent");
           })}
         </div>
@@ -239,7 +241,7 @@ export function OpportunityCard(
             backgroundColor: "white",
           }}
         />
-        <div className="flex flex-col p-4">
+        <div className="flex flex-col p-4 w-full">
           <h1 className="text-xl font-semibold text-slate-800 py-3">
             {opportunity.title}
           </h1>
