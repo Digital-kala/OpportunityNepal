@@ -10,6 +10,8 @@ import {
 } from "./utils";
 import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
+import bannerImg1 from "../assets/banner1.png";
+
 import bannerImg from "../assets/banner.png";
 
 export type OpportunitySummary = {
@@ -136,7 +138,7 @@ export function Home() {
       <div
         className="bg-gray-200 w-full pt-[20vh] pb-2 md:pb-[4vh] px-16 shadow-md"
         style={{
-          backgroundImage: `url(${bannerImg})`,
+          backgroundImage: `url(${bannerImg1})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
@@ -158,7 +160,20 @@ export function Home() {
             Post An Opportunity
           </button>
         </div>
-        <div className="pb-5">
+
+        <div
+          className="flex justify-center items-center w-full"
+          style={{
+            padding: '1rem 0',
+          }}
+        >
+          <div
+            className="pb-5"
+            style={{
+              width: '90%', 
+              maxWidth: '900px', 
+            }}
+          >
           <ReactSearchAutocomplete
             items={searchOpportunities}
             onSearch={() => {}}
@@ -171,7 +186,11 @@ export function Home() {
             formatResult={formatResult}
             styling={{ zIndex: 100 }}
           />
+
+          </div>
         </div>
+
+        
       </div>
 
       <div className="w-full pt-10 pb-4 px-4">
