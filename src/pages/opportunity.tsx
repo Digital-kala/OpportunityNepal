@@ -210,6 +210,8 @@ export function Opportunity() {
           opportunity.additionalInformation,
           true
         )}
+
+        <div className="pb-8" />
       </div>
     </Layout>
   );

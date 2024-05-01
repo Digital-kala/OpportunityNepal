@@ -13,7 +13,6 @@ export function handleURLClick(url: string) {
 export function formatDate(date: Date) {
   try {
     const dateString = date.toLocaleDateString("en-US", {
-      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",

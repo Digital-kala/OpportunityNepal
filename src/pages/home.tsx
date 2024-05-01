@@ -10,8 +10,11 @@ import {
 } from "./utils";
 import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
-import bannerImg1 from "../assets/banner1.png";
+import { CgReadme } from "react-icons/cg";
+import { BsHourglassSplit } from "react-icons/bs";
+import { IoAddCircleOutline } from "react-icons/io5";
 
+import bannerImg1 from "../assets/banner1.png";
 import bannerImg from "../assets/banner.png";
 
 export type OpportunitySummary = {
@@ -164,37 +167,34 @@ export function Home() {
         <div
           className="flex justify-center items-center w-full"
           style={{
-            padding: '1rem 0',
+            padding: "1rem 0",
           }}
         >
           <div
             className="pb-5"
             style={{
-              width: '90%', 
-              maxWidth: '900px', 
+              width: "90%",
+              maxWidth: "900px",
             }}
           >
-          <ReactSearchAutocomplete
-            items={searchOpportunities}
-            onSearch={() => {}}
-            onHover={() => {}}
-            onSelect={(e) =>
-              handleNavLinkClick(`#/opportunity/${e.opportunityId}`)
-            }
-            onFocus={() => {}}
-            autoFocus
-            formatResult={formatResult}
-            styling={{ zIndex: 100 }}
-          />
-
+            <ReactSearchAutocomplete
+              items={searchOpportunities}
+              onSearch={() => {}}
+              onHover={() => {}}
+              onSelect={(e) =>
+                handleNavLinkClick(`#/opportunity/${e.opportunityId}`)
+              }
+              onFocus={() => {}}
+              autoFocus
+              formatResult={formatResult}
+              styling={{ zIndex: 100 }}
+            />
           </div>
         </div>
-
-        
       </div>
 
-      <div className="w-full pt-10 pb-4 px-4">
-        <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center drop-shadow-md z-0">
+      <div className="w-full pt-[10vh] pb-4 px-4">
+        <h1 className="pb-6 font-bold text-3xl text-slate-800 text-center">
           Upcoming Opportunties
         </h1>
         <div className="flex p-y-4 overflow-x-auto">
@@ -204,16 +204,16 @@ export function Home() {
         </div>
       </div>
 
-      <div className="w-full pt-5 pb-8 px-4">
-        <h1 className="pb-2 font-bold text-3xl text-slate-800 text-center drop-shadow-md">
+      <div className="w-full py-[10vh] px-4">
+        <h1 className="pb-6 font-bold text-3xl text-slate-800 text-center">
           Recently Added
         </h1>
         <div className="flex p-y-4 overflow-x-auto">
-          {recentlyAddedOpportunities.sort((a, b) =>
-            a.createdDate > b.createdDate ? -1 : 1
-          ).map((opportunity, index) => {
-            return OpportunityCard(index, opportunity, "recent");
-          })}
+          {recentlyAddedOpportunities
+            .sort((a, b) => (a.createdDate > b.createdDate ? -1 : 1))
+            .map((opportunity, index) => {
+              return OpportunityCard(index, opportunity, "recent");
+            })}
         </div>
       </div>
     </Layout>
@@ -252,7 +252,7 @@ export function OpportunityCard(
     >
       <button className="w-full h-full rounded-lg shadow-md border-0 flex flex-col">
         <div
-          className="bg-gray-200 h-64 w-full rounded-lg shadow-sm overflow-hidden"
+          className="h-64 w-full rounded-t-lg overflow-hidden0"
           style={{
             backgroundImage: `url(${image})`,
             backgroundSize: "cover",
@@ -260,22 +260,34 @@ export function OpportunityCard(
             backgroundColor: "white",
           }}
         />
-        <div className="flex flex-col p-4 w-full">
-          <h1 className="text-xl font-semibold text-slate-800 py-3">
+
+        <div className="flex flex-col w-full px-5 pt-3 m-auto items-center place-content-evenly space-y-5">
+          <h1 className="text-xl font-bold text-slate-800">
             {opportunity.title}
           </h1>
-          <p className="bg-slate-200/50 py-2 rounded-lg mb-5 text-sm">
-            {cardtype === "upcoming"
-              ? "Deadline : " + formatDate(opportunity.deadlineDate)
-              : "Added on " + formatDate(opportunity.createdDate)}
-          </p>
 
-          <p className="text-gray-800 text-justify px-4 pb-2 text-sm">
+          <div className="bg-sky-400/10 py-2.5 rounded-lg mb-5 text-sm font-semibold text-sky-600/60 w-full flex flex-row space-x-2 justify-center items-center">
+            {cardtype === "upcoming" ? <BsHourglassSplit  className="w-4 h-4"/> : <IoAddCircleOutline  className="w-5 h-5"/>}
+            <div>
+              {cardtype === "upcoming"
+                ? "Deadline : " + formatDate(opportunity.deadlineDate)
+                : "Added on " + formatDate(opportunity.createdDate)}
+            </div>
+          </div>
+
+          <p className="text-gray-800 text-left text-sm">
             {opportunity.description.length > maxDescriptionLength
               ? opportunity.description.substring(0, maxDescriptionLength) +
                 " . . ."
               : opportunity.description}
           </p>
+        </div>
+
+        <div className="px-5 my-4 w-full pb-2">
+          <div className="border-2 border-dashed rounded-lg border-slate-300 px-2 py-3 text-slate-500 text-sm font-semibold flex flex-row space-x-2 justify-center items-center">
+            <CgReadme className="w-5 h-5" />
+            <div className="my-auto">Read More</div>
+          </div>
         </div>
       </button>
     </div>

@@ -250,7 +250,7 @@ export function OpportunitySearch() {
           </div>
         </div>
 
-        <div className="w-full pt-8">
+        <div className="w-full pt-8 pb-[10vh]">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredOpportunities.map((opportunity, index) => {
               return OpportunityCard(
