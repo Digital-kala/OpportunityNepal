@@ -12,7 +12,7 @@ import PublicGoogleSheetsParser from "public-google-sheets-parser";
 
 import { CgReadme } from "react-icons/cg";
 import { BsHourglassSplit } from "react-icons/bs";
-import { IoAddCircleOutline } from "react-icons/io5";
+import { IoAddCircleOutline, IoSend } from "react-icons/io5";
 
 import bannerImg1 from "../assets/banner1.png";
 import bannerImg from "../assets/banner.png";
@@ -154,13 +154,14 @@ export function Home() {
             <span className="text-yellow-500">Explore</span>
             <span className="text-white"> New Opportunities!</span>
           </h1>
-          <p className="text-gray-200 text-lg drop-shadow-md cartoonify">Or</p>
+          <p className="text-white text-lg drop-shadow-md cartoonify">Or</p>
           <button
-            className="px-4 py-2 text-md bg-gray-200/95 rounded-lg website_blue"
+            className="px-5 py-3 text-md bg-white rounded-lg website_blue flex flex-row justify-center items-center"
             style={{ zIndex: 2, boxShadow: "0px 0 2px black" }}
             onClick={() => handleURLClick(opportunityFormURL)}
           >
-            Post An Opportunity
+            <IoSend className="w-3 h-3 md:w-4 md:h-4 inline-block mr-2" />
+            <div className="font-bold">Post an Opportunity</div>
           </button>
         </div>
 
@@ -194,7 +195,7 @@ export function Home() {
       </div>
 
       <div className="w-full pt-[10vh] pb-4 px-4">
-        <h1 className="pb-6 font-bold text-3xl text-slate-800 text-center">
+        <h1 className="pb-6 font-bold text-3xl text-sky-700 text-center">
           Upcoming Opportunties
         </h1>
         <div className="flex p-y-4 overflow-x-auto">
@@ -205,7 +206,7 @@ export function Home() {
       </div>
 
       <div className="w-full py-[10vh] px-4">
-        <h1 className="pb-6 font-bold text-3xl text-slate-800 text-center">
+        <h1 className="pb-6 font-bold text-3xl text-sky-700 text-center">
           Recently Added
         </h1>
         <div className="flex p-y-4 overflow-x-auto">
@@ -267,7 +268,11 @@ export function OpportunityCard(
           </h1>
 
           <div className="bg-sky-400/10 py-2.5 rounded-lg mb-5 text-sm font-semibold text-sky-600/60 w-full flex flex-row space-x-2 justify-center items-center">
-            {cardtype === "upcoming" ? <BsHourglassSplit  className="w-4 h-4"/> : <IoAddCircleOutline  className="w-5 h-5"/>}
+            {cardtype === "upcoming" ? (
+              <BsHourglassSplit className="w-4 h-4" />
+            ) : (
+              <IoAddCircleOutline className="w-5 h-5" />
+            )}
             <div>
               {cardtype === "upcoming"
                 ? "Deadline : " + formatDate(opportunity.deadlineDate)

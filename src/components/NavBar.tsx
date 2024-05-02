@@ -7,7 +7,9 @@ import {
 
 import { FaHome, FaSearch } from "react-icons/fa";
 import { HiMiniUserGroup } from "react-icons/hi2";
+import { IoSend } from "react-icons/io5";
 import { IconType } from "react-icons";
+
 import Logo from "../assets/icon.png"; // Import your logo image path
 
 export const opportunityFormURL =
@@ -97,10 +99,11 @@ export function NavBar({ pageTitle }: { pageTitle?: string }) {
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button
               type="button"
-              className="text-white bg_website_blue hover:bg_website_dblue focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center :bg_website_dblue "
+              className="text-white bg_website_blue font-medium rounded-lg text-sm px-3 py-3 text-center flex flex-row space-x-1 justify-center items-center"
               onClick={() => handleURLClick(opportunityFormURL)}
             >
-              Post an Opportunity
+              <IoSend className="w-3 h-3 md:w-4 md:h-4 inline-block mr-2" />
+              <div className="font-bold">Post an Opportunity</div>
             </button>
 
             <button

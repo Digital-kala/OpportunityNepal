@@ -21,7 +21,7 @@ const teamMembers = [
 export function About() {
   return (
     <Layout pageTitle="About">
-      <div className="bg_website_ddblue py-12 md:px-16 pt-[20vh] pb-2 md:pb-[4vh] flex flex-col items-center">
+      <div className="bg_website_blue md:px-16 py-[20vh] flex flex-col items-center">
         <h1 className="text-4xl md:text-6xl text-slate-50 font-bold tracking-wide max-sm">
           Know about <span className="website_yellow">us!</span>{" "}
         </h1>

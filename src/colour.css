@@ -1,26 +1,24 @@
-.website_blue{
-  color: #376C9C;
-}
- .bg_website_blue{
-  background-color: #376C9C;
+.website_blue {
+  color: #376c9c;
 }
 
+.bg_website_blue {
+  background-color: #376c9c;
+}
 
 .website_yellow {
-  color: #FACC04
-} 
-
+  color: #facc04;
+}
 
 .website_dblue {
-  color: #0B2C4E
+  color: #0b2c4e;
 }
 
-
-.bg_website_dblue{
-  background-color: #0B2C4E;
+.bg_website_dblue {
+  background-color: #0b2c4e;
 }
 
-
-.bg_website_ddblue{
-background-color: #376C9C;
+.bg_website_gradient_blue {
+  position: relative;
+  background: linear-gradient(180deg, #376c9c 0%, #0b2c4e 100%);
 }

@@ -1,3 +1,5 @@
+import { send } from "vite";
+
 export function handleNavLinkClick(hash: string) {
   window.location.hash = hash;
 }
@@ -8,6 +10,10 @@ export function redirectHome() {
 
 export function handleURLClick(url: string) {
   window.open(url, "_blank");
+}
+
+export function sendEmail() {
+  window.open("mailto:digitalkala.nepal@gmail.com");
 }
 
 export function formatDate(date: Date) {
