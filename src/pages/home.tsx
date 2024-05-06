@@ -14,7 +14,8 @@ import { CgReadme } from "react-icons/cg";
 import { BsHourglassSplit } from "react-icons/bs";
 import { IoAddCircleOutline, IoSend } from "react-icons/io5";
 
-import bannerImg1 from "../assets/banner1.png";
+import students from "../assets/students.png";
+import opportunityIcons from "../assets/opportunity_icons.png";
 import bannerImg from "../assets/banner.png";
 
 export type OpportunitySummary = {
@@ -139,15 +140,18 @@ export function Home() {
   return (
     <Layout pageTitle="Home">
       <div
-        className="bg-gray-200 w-full pt-[20vh] pb-2 md:pb-[4vh] px-16 shadow-md"
+        className="overflow-hidden w-full pt-[20vh] pb-[5vh] md:pb-[10vh] px-16 shadow-md relative"
         style={{
-          backgroundImage: `url(${bannerImg1})`,
+          backgroundImage: 'linear-gradient(to right, rgb(5, 25, 49), rgb(55, 108, 156))',
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
       >
+        <img src={students} className="absolute right-[-0.5%] bottom-0 w-[24%] prevent-select hidden md:block"/>
+        <img src={opportunityIcons} className="absolute left-[-0.5%] top-0 h-full prevent-select opacity-5 md:opacity-60"/>
+
         <div
-          className="flex flex-col p-4 justify-center items-center h-full gap-y-4 mb-4 font-bold"
+          className="flex flex-col p-4 justify-center items-center h-full gap-y-5 mb-4 font-bold"
           style={{ textShadow: "0px 0 8px black" }}
         >
           <h1 className=" text-3xl md:text-5xl tracking-wide text-center">
@@ -174,8 +178,8 @@ export function Home() {
           <div
             className="pb-5"
             style={{
-              width: "90%",
-              maxWidth: "900px",
+              width: "85%",
+              maxWidth: "850px",
             }}
           >
             <ReactSearchAutocomplete
