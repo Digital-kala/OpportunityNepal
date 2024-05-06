@@ -2,12 +2,16 @@
 
 Welcome to Opportunity Nepal, a platform designed to help individuals find opportunities in Nepal and connect them with those who are providing them. This README will guide you through the steps to set up and run the react website using Yarn.
 
+<br/>
+
 ## Prerequisites
 
 Before you begin, make sure you have the following software installed on your system:
 
-- [Node.js](https://nodejs.org/) [Install via Brew](brew install node)
+- [Node.js](https://nodejs.org/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/)
+
+<br/>
 
 ## Getting Started
 
@@ -28,6 +32,8 @@ cd opportunity-nepal
 yarn
 ```
 
+<br/>
+
 ## Running the Development Server
 
 Once the dependencies are installed, you can start the development server using the following command:
@@ -37,6 +43,8 @@ yarn start
 ```
 
 This will compile the project and open a new browser window displaying the Opportunity Nepal website. By default, the development server runs on http://localhost:3000/.
+
+<br/>
 
 ## Contributing
 
@@ -48,8 +56,8 @@ If you'd like to contribute to the Opportunity Nepal project, please follow thes
 - Push your changes to your fork.
 - Create a pull request to the main branch of the original repository.
 
+<br/>
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE.txt). Please read the license for more information.
-
-Thank you for using Opportunity Nepal! If you encounter any issues or have suggestions for improvement, please feel free to open an issue or contribute to the project. We appreciate your support and involvement in making this platform better.

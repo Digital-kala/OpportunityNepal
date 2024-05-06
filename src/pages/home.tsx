@@ -14,9 +14,10 @@ import { CgReadme } from "react-icons/cg";
 import { BsHourglassSplit } from "react-icons/bs";
 import { IoAddCircleOutline, IoSend } from "react-icons/io5";
 
-import students from "../assets/students.png";
-import opportunityIcons from "../assets/opportunity_icons.png";
 import bannerImg from "../assets/banner.png";
+import blueBackground from "../assets/blue_background.png";
+import students from "../assets/illustrations/students.png";
+import scienceSymbols from "../assets/illustrations/scienceSymbols.png";
 
 export type OpportunitySummary = {
   id: number;
@@ -142,25 +143,25 @@ export function Home() {
       <div
         className="overflow-hidden w-full pt-[20vh] pb-[5vh] md:pb-[10vh] px-16 shadow-md relative"
         style={{
-          backgroundImage: 'linear-gradient(to right, rgb(5, 25, 49), rgb(55, 108, 156))',
+          backgroundImage: 'url("' + blueBackground + '")',
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
       >
         <img src={students} className="absolute right-[-0.5%] bottom-0 w-[24%] prevent-select hidden md:block"/>
-        <img src={opportunityIcons} className="absolute left-[-0.5%] top-0 h-full prevent-select opacity-5 md:opacity-60"/>
+        <img src={scienceSymbols} className="absolute left-[-0.5%] top-0 h-full prevent-select opacity-10 md:opacity-60"/>
 
         <div
-          className="flex flex-col p-4 justify-center items-center h-full gap-y-5 mb-4 font-bold"
-          style={{ textShadow: "0px 0 8px black" }}
+          className="flex flex-col p-4 justify-center items-center h-full gap-y-6 mb-4 font-bold"
+          style={{ textShadow: "0px 0px 6px #0b2c4e" }}
         >
-          <h1 className=" text-3xl md:text-5xl tracking-wide text-center">
+          <h1 className="text-3xl md:text-5xl tracking-wide text-center">
             <span className="text-yellow-500">Explore</span>
             <span className="text-white"> New Opportunities!</span>
           </h1>
-          <p className="text-white text-lg drop-shadow-md cartoonify">Or</p>
+          <p className="text-white text-sm md:text-xl">OR</p>
           <button
-            className="px-5 py-3 text-md bg-white rounded-lg website_blue flex flex-row justify-center items-center"
+            className="px-5 py-3 text-md bg-white rounded-full website_blue flex flex-row justify-center items-center"
             style={{ zIndex: 2, boxShadow: "0px 0 2px black" }}
             onClick={() => handleURLClick(opportunityFormURL)}
           >
